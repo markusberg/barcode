@@ -44,6 +44,9 @@ export const BarcodeSchema = z.object({
   layout: LayoutSchema,
 })
 
+export type LabelDef = z.infer<typeof LabelDefSchema>
+export type Series = z.infer<typeof SeriesSchema>
+
 export type Label = z.infer<typeof LabelSchema>
 export type Design = z.infer<typeof DesignSchema>
 export type Layout = z.infer<typeof LayoutSchema>

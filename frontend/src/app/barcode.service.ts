@@ -21,10 +21,10 @@ export type ILayoutForm = Formify<Layout>
 @Injectable({ providedIn: 'root' })
 export class BarcodeService {
   constructor(private fb: FormBuilder, private httpClient: HttpClient) {}
+  url = `api/barcodes`
 
   generatePdf(barcode: Barcode): Observable<Blob> {
-    const url = `api/barcodes/`
-    return this.httpClient.post(url, barcode, {
+    return this.httpClient.post(this.url, barcode, {
       responseType: 'blob',
     })
   }

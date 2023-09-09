@@ -1,6 +1,10 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
+.clickable {
+  cursor: pointer;
+}
+
 // add some fontawesome-like transformation classes to bootstrap-icons
 .bi {
   &.bi-2x {
