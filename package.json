@@ -1,0 +1,37 @@
+{
+  "name": "barcode",
+  "version": "1.0.0",
+  "description": "Web application for generating DLT and LTO barcodes",
+  "main": "index.js",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "prep": "npm install && husky install && chmod ug+x .husky/*",
+    "test": "npm run test --workspaces"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markusberg/barcode.git"
+  },
+  "keywords": [
+    "barcode",
+    "lto",
+    "dlt",
+    "tape",
+    "backup"
+  ],
+  "author": "Markus Berg <markus@kelvin.nu>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/markusberg/barcode/issues"
+  },
+  "homepage": "https://github.com/markusberg/barcode#readme",
+  "dependencies": {
+    "husky": "^8.0.3",
+    "prettier": "^2.8.8",
+    "pretty-quick": "^3.1.3"
+  }
+}

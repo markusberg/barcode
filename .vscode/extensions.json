@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "eamodio.gitlens",
+    "angular.ng-template",
+    "esbenp.prettier-vscode"
+  ]
+}

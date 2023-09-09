@@ -1,0 +1,4 @@
+node_modules
+frontend/.angular
+frontend/dist
+backend/dist
