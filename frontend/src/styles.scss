@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// add some fontawesome-like transformation classes to bootstrap-icons
+.bi {
+  &.bi-2x {
+    font-size: 2em;
+  }
+  &.bi-3x {
+    font-size: 3em;
+  }
+  &.bi-spin::before {
+    animation: bi-spin 2s linear infinite;
+  }
+  &.bi-pulse::before {
+    animation: bi-spin 1s steps(8) infinite;
+  }
+}

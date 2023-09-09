@@ -1,0 +1,11 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend of barcode generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo no tests yet"
+  },
+  "author": "Markus Berg <markus@kelvin.nu>",
+  "license": "Apache-2.0"
+}

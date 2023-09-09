@@ -1,0 +1,99 @@
+<ng-container *ngIf="form" formArray="form">
+  <div class="row font-weight-bold">
+    <div class="col"><label class="form-label">Tape type</label></div>
+    <div class="col"><label class="form-label">Suffix</label></div>
+    <div class="col"><label class="form-label">Prefix</label></div>
+    <div class="col"><label class="form-label">Starting number</label></div>
+    <div class="col-3"><label class="form-label">Number of labels</label></div>
+    <div class="col">&nbsp;</div>
+  </div>
+  <div
+    class="row"
+    *ngFor="let label of form.controls; let idx = index"
+    [formGroup]="label"
+  >
+    <div class="col">
+      <div class="form-group">
+        <select
+          class="form-select"
+          formControlName="tapetype"
+          (change)="onTapetypeChange(label)"
+        >
+          <option *ngFor="let t of tapetypes" [value]="t.id">
+            {{ t.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col">
+      <div
+        class="form-group"
+        [ngSwitch]="label.controls.tapetype.value !== 'DLT'"
+      >
+        <input
+          *ngSwitchCase="true"
+          class="form-control"
+          formControlName="suffix"
+        />
+        <span *ngSwitchCase="false">N/A</span>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="form-group">
+        <input class="form-control" formControlName="prefix" />
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="form-group">
+        <input class="form-control" formControlName="startno" />
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="inline-form">
+        <div class="form-check text-nowrap me-3">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            formControlName="fillpage"
+            id="fillpage{{ idx }}"
+          />
+          <label class="form-check-label" for="fillpage{{ idx }}"
+            >Fill page</label
+          >
+        </div>
+        <div class="form-group" [hidden]="label.controls.fillpage.value">
+          <input
+            class="form-control"
+            formControlName="num"
+            type="number"
+            (blur)="onNumBlur(label)"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="col text-end" [ngSwitch]="isLast(idx)">
+      <div class="form-group">
+        <button
+          type="button"
+          class="btn btn-primary text-nowrap"
+          (click)="appendCopy(label)"
+          *ngSwitchCase="true"
+        >
+          <i class="bi bi-plus me-1"></i>Add
+        </button>
+        <button
+          class="btn btn-warning text-nowrap"
+          (click)="removeLabels(idx)"
+          *ngSwitchCase="false"
+        >
+          <i class="bi bi-trash me-1"></i>Remove
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>

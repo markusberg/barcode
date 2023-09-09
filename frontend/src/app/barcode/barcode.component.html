@@ -1,0 +1,97 @@
+<div class="container">
+  <h1>Barcode label generator</h1>
+  <img class="float-end" src="assets/barcode-screenshot.png" />
+  <p>
+    Use this form to generate barcodes for your tape library. Each LTO label can
+    contain at most six characters plus a two-character media identifier (L3,
+    L4, etc.). A DLT label is limited to six characters.
+  </p>
+
+  <p>
+    Mixing DLT and LTO labels will render strange results. You probably don't
+    want to do that.
+  </p>
+
+  <p>All feedback is welcome.</p>
+
+  <div class="clearfix"></div>
+
+  <app-barcode-labels [form]="form.controls.labels"></app-barcode-labels>
+
+  <nav ngbNav #nav="ngbNav" class="nav-tabs mt-3">
+    <ng-container ngbNavItem>
+      <a ngbNavLink>Label design</a>
+      <ng-template ngbNavContent>
+        <app-barcode-design [form]="form.controls.design"></app-barcode-design>
+      </ng-template>
+    </ng-container>
+    <ng-container ngbNavItem>
+      <a ngbNavLink>Page layout</a>
+      <ng-template ngbNavContent>
+        <app-barcode-layout [form]="form.controls.layout"></app-barcode-layout>
+        <div class="text-end mt-3">
+          <button
+            class="btn btn-secondary btn-sm me-2"
+            (click)="setPageLayout('LTO')"
+          >
+            Set default LTO layout
+          </button>
+          <button
+            class="btn btn-secondary btn-sm"
+            (click)="setPageLayout('DLT')"
+          >
+            Set default DLT layout
+          </button>
+        </div>
+      </ng-template>
+    </ng-container>
+  </nav>
+
+  <div [ngbNavOutlet]="nav" class="p-3 border border-top-0"></div>
+
+  <div class="d-grid mt-3">
+    <button
+      class="btn btn-primary"
+      (click)="generatePdf()"
+      [disabled]="isLoading"
+    >
+      <span *ngIf="!isLoading">
+        Generate barcodes
+        <i class="bi bi-file-earmark-pdf ms-1"></i>
+      </span>
+      <span *ngIf="isLoading">
+        <i class="bi bi-arrow-repeat bi-spin me-1"></i>Please stand by...</span
+      >
+    </button>
+  </div>
+  <p>Latest update: 2023-09-09</p>
+
+  <div *ngIf="pdf$ | async as src">
+    <iframe [src]="src" class="w-100"></iframe>
+  </div>
+
+  <div class="card border-danger" *ngIf="error$ | async as error">
+    <div class="card-header bg-danger text-white">
+      Unable to generate barcodes :-/
+    </div>
+    <div class="card-body">
+      Something went wrong while generating the barcodes. Sorry about that.
+      Please try again...
+      <div class="card bg-light mt-3">
+        <div
+          class="card-header clickable"
+          (click)="errorExpanded = !errorExpanded"
+        >
+          Details
+          <i
+            class="ms-3 bi"
+            [ngClass]="errorExpanded ? 'bi-chevron-down' : 'bi-chevron-right'"
+          ></i>
+        </div>
+        <div class="card-body" *ngIf="errorExpanded">
+          <pre>{{ error | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
