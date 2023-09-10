@@ -2,14 +2,14 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Backend of barcode generator",
-  "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "build": "npm run build:prep && npm run build:bundle && npm run build:typecheck",
+    "build": "npm run build:prep && npm run build:tsc",
     "build:prep": "rimraf dist && mkdir dist && cp -r src/views dist/views",
     "build:bundle": "node esbuild.js",
+    "build:tsc": "tsc -p ./tsconfig.prod.json",
     "build:typecheck": "tsc -p ./tsconfig.prod.json --emitDeclarationOnly",
-    "debug": "nodemon -e ts -w ./src --exec 'npm run build && node --enable-source-maps --inspect ./dist/www.mjs'",
+    "debug": "nodemon -e ts -w ./src --exec 'npm run build && node --enable-source-maps --inspect ./dist/www.js'",
     "test": "echo jest --coverage",
     "test:watch": "jest --watchAll",
     "test:watch:coverage": "jest --watchAll --coverage"

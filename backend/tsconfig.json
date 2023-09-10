@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "module": "ES2022",
-    "moduleResolution": "Bundler",
-    "esModuleInterop": true,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "target": "ES2022",
     "sourceMap": true,
     "lib": ["ES2022", "DOM"],
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
     "strict": true,
     "declaration": true,

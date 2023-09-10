@@ -52,8 +52,8 @@
   <div class="d-grid mt-3">
     <button
       class="btn btn-primary"
-      (click)="generatePdf()"
-      [disabled]="isLoading"
+      (click)="generate$.next(true)"
+      [disabled]="form.invalid || isLoading"
     >
       <span *ngIf="!isLoading">
         Generate barcodes
@@ -64,34 +64,36 @@
       >
     </button>
   </div>
-  <p>Latest update: 2023-09-09</p>
+  <p>Latest update: 2023-09-10</p>
 
-  <div *ngIf="pdf$ | async as src">
-    <iframe [src]="src" class="w-100"></iframe>
-  </div>
-
-  <div class="card border-danger" *ngIf="error$ | async as error">
-    <div class="card-header bg-danger text-white">
-      Unable to generate barcodes :-/
+  <ng-container *ngIf="{ pdf: pdf$ | async, error: error$ | async } as vm">
+    <div *ngIf="vm.pdf && !vm.error">
+      <iframe [src]="vm.pdf" class="w-100 border"></iframe>
     </div>
-    <div class="card-body">
-      Something went wrong while generating the barcodes. Sorry about that.
-      Please try again...
-      <div class="card bg-light mt-3">
-        <div
-          class="card-header clickable"
-          (click)="errorExpanded = !errorExpanded"
-        >
-          Details
-          <i
-            class="ms-3 bi"
-            [ngClass]="errorExpanded ? 'bi-chevron-down' : 'bi-chevron-right'"
-          ></i>
-        </div>
-        <div class="card-body" *ngIf="errorExpanded">
-          <pre>{{ error | json }}</pre>
+
+    <div class="card border-danger" *ngIf="vm.error">
+      <div class="card-header bg-danger text-white">
+        Unable to generate barcodes :-/
+      </div>
+      <div class="card-body">
+        Something went wrong while generating the barcodes. Sorry about that.
+        Please try again...
+        <div class="card bg-light mt-3">
+          <div
+            class="card-header clickable"
+            (click)="errorExpanded = !errorExpanded"
+          >
+            Details
+            <i
+              class="ms-3 bi"
+              [ngClass]="errorExpanded ? 'bi-chevron-down' : 'bi-chevron-right'"
+            ></i>
+          </div>
+          <div class="card-body" *ngIf="errorExpanded">
+            <pre>{{ vm.error | json }}</pre>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>

@@ -7,7 +7,7 @@ import { EnvBannerComponent } from './env-banner/env-banner.component'
 @Component({
   selector: 'app-root',
   template: `<app-env-banner></app-env-banner>
-    <app-menubar class="sticky-top"></app-menubar>
+    <app-menubar></app-menubar>
     <router-outlet></router-outlet>`,
   standalone: true,
   imports: [CommonModule, EnvBannerComponent, MenubarComponent, RouterModule],

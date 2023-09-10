@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces",
-    "build:docker": "docker build --tag $npm_package_name",
+    "build:image": "docker build --tag $npm_package_name .",
     "prep": "npm install && husky install && chmod ug+x .husky/*",
     "test": "npm run test --workspaces"
   },

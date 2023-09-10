@@ -8,7 +8,7 @@ export const LabelDefSchema = z.object({
 
 export const SeriesSchema = z.object({
   tapetype: z.string(),
-  suffix: z.string(),
+  suffix: z.string().toUpperCase(),
   labels: LabelDefSchema.array(),
 })
 
@@ -21,11 +21,11 @@ export const DesignSchema = z.object({
 
 export const LabelSchema = z.object({
   tapetype: z.string(),
-  prefix: z.string(),
+  prefix: z.string().toUpperCase(),
   startno: z.string(),
-  suffix: z.string(),
+  suffix: z.string().toUpperCase(),
   fillpage: z.boolean(),
-  num: z.number().int(),
+  num: z.number().int().min(1).max(999),
 })
 
 export const LayoutSchema = z.object({

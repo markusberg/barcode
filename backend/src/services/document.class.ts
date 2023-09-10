@@ -1,6 +1,6 @@
 import PDFDocument from 'pdfkit'
 import { Label } from './label.class'
-import { Design, LabelDef, Layout, Series } from 'src/interfaces/barcode'
+import { Design, LabelDef, Layout, Series } from '../interfaces/barcode'
 
 export class Document {
   doc: PDFKit.PDFDocument
@@ -27,7 +27,6 @@ export class Document {
     const labelsPerPage = this.layout.cols * this.layout.rows
     for (let i = 0; i < series.labels.length; i++) {
       if (this.labelsSoFar && this.labelsSoFar % labelsPerPage === 0) {
-        console.log('adding page')
         this.doc.addPage({
           size: this.layout.pagesize,
           margins: {
@@ -43,26 +42,17 @@ export class Document {
     }
   }
 
-  public async drawBarcode(
-    labelDef: LabelDef,
-    tapetype: string,
-    suffix: string,
-  ) {
-    let bc = new Label(this.design)
-
-    bc.setTapetype(tapetype)
-    bc.setSuffix(suffix)
+  async drawBarcode(labelDef: LabelDef, tapetype: string, suffix: string) {
+    const bc = new Label(this.design, tapetype, suffix, labelDef.text)
 
     const x =
       this.layout.marginLeft +
-      labelDef.col * (bc.getWidth() + this.layout.spacingCol)
+      labelDef.col * (bc.width + this.layout.spacingCol)
     const y =
       this.layout.marginTop +
-      labelDef.row * (bc.getHeight() + this.layout.spacingRow)
+      labelDef.row * (bc.height + this.layout.spacingRow)
 
-    bc.setOrigin(x, y)
-    bc.setText(labelDef.text)
-    await bc.draw(this.doc)
+    await bc.draw(this.doc, x, y)
   }
 
   public write() {

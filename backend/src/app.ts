@@ -1,17 +1,18 @@
-import express, { Request, Response } from 'express'
-import morgan from 'morgan'
-import path, { join } from 'node:path'
-import { nodeEnv, APP_ROOT_DIR, env } from './env'
+import { join } from 'node:path'
+import { readFileSync } from 'node:fs'
+
 import cors from 'cors'
 import compression from 'compression'
+import express, { Request, Response } from 'express'
+import morgan from 'morgan'
 
+import { nodeEnv, APP_ROOT_DIR, env } from './env'
 import { router as api } from './routes'
-import { readFileSync } from 'node:fs'
 
 const app = express()
 
 // view engine setup
-app.set('views', path.join(APP_ROOT_DIR, 'backend', 'views'))
+app.set('views', join(APP_ROOT_DIR, 'backend', 'views'))
 app.set('view engine', 'pug')
 
 // Inform express.js that we're behind a proxy
@@ -53,6 +54,7 @@ if (nodeEnv === 'production') {
  * Define routes
  */
 const pathFrontendDist = join(APP_ROOT_DIR, 'frontend', 'dist')
+console.log(`Path to frontend dist:`, pathFrontendDist)
 app.use(env.SERVER_PREFIX, express.static(pathFrontendDist, { index: false }))
 app.use(`${env.SERVER_PREFIX}/api`, api)
 app.get('*', indexHtmlFallback(pathFrontendDist))
@@ -64,7 +66,6 @@ app.get('*', indexHtmlFallback(pathFrontendDist))
  * @returns
  */
 function indexHtmlFallback(pathFrontendDist: string) {
-  console.log(pathFrontendDist)
   const cache = getIndexHtml(join(pathFrontendDist, 'index.html'))
 
   return (_req: Request, res: Response) => res.type('html').send(cache)

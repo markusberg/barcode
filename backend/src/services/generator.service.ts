@@ -1,10 +1,8 @@
 import { Barcode } from '../interfaces/barcode'
 import { Document } from './document.class'
 
-class BarcodeService {
+class GeneratorService {
   public async generatePdf(barcode: Barcode): Promise<PDFKit.PDFDocument> {
-    console.log('Generating barcodes')
-
     const labelsPerPage = barcode.layout.cols * barcode.layout.rows
     let labelsSoFar = 0
 
@@ -52,4 +50,4 @@ class BarcodeService {
   }
 }
 
-export const barcodeService = new BarcodeService()
+export const generatorService = new GeneratorService()

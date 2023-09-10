@@ -1,9 +1,10 @@
 import { Design } from '../interfaces/barcode'
 
-import { toBuffer } from 'bwip-js'
+// FIXME: esm is causing problems :-/
+const bwipJs = require('bwip-js')
 
 export class Label {
-  private colors = [
+  private colors: [number, number, number][] = [
     [182, 40, 42],
     [252, 227, 75],
     [149, 196, 83],
@@ -16,123 +17,91 @@ export class Label {
     [113, 88, 128],
   ]
 
-  private x!: number
-  private y!: number
-  private text!: string
+  constructor(
+    private design: Design,
+    private tapeType: string,
+    private suffix: string,
+    private text: string,
+  ) {
+    this.width = this.tapeType === 'DLT' ? 55 : 76.2
+    this.height = this.tapeType === 'DLT' ? 21 : 15.875
+    this.radius = this.tapeType === 'DLT' ? 0 : 2.5
+    this.barcodeWidth = this.tapeType === 'DLT' ? 47 : 65
+    this.barcodeHeight = this.tapeType === 'DLT' ? 15 : 10.5
+    this.paddingSide = Math.round((this.width - this.barcodeWidth) / 2)
 
-  private textPosition: string
-  private textOrientation: string
-  private borders: boolean
-  private colorized: boolean
-
-  private tapeType!: string
-  private suffix!: string
-
-  constructor(design: Design) {
-    this.textPosition = design.textPosition
-    this.textOrientation = design.textOrientation
-    this.borders = design.borders
-    this.colorized = design.colorized
-  }
-
-  public setTapetype(tapetype: string) {
-    this.tapeType = tapetype
-  }
-  public setSuffix(suffix: string) {
-    this.suffix = suffix.slice(0, 2)
-  }
-  public setOrigin(x: number, y: number) {
-    this.x = x
-    this.y = y
-  }
-  public setText(text: string) {
-    this.text = text
-  }
-  public getWidth(): number {
-    return this.tapeType === 'DLT' ? 55 : 76.2
-  }
-  public getHeight(): number {
-    return this.tapeType === 'DLT' ? 21 : 15.875
+    this.numberOfBoxes = this.tapeType === 'DLT' ? 6 : 7
+    this.boxWidth = (this.width - 2 * this.radius) / this.numberOfBoxes
+    this.boxHeight = this.height - this.barcodeHeight - this.paddingTop
   }
 
-  // // // // // // //
-
-  private getRadius(): number {
-    return this.tapeType === 'DLT' ? 0 : 2.5
-  }
-  private getBarcodeWidth(): number {
-    return this.tapeType === 'DLT' ? 47 : 65
-  }
-  private getBarcodeHeight(): number {
-    return this.tapeType === 'DLT' ? 15 : 10.5
-  }
-  private getPaddingTop(): number {
-    return 0
-  }
-  private getPaddingSide(): number {
-    // return this.tapeType === 'DLT' ? 3 : 5
-    return Math.round((this.getWidth() - this.getBarcodeWidth()) / 2)
-  }
+  width: number
+  height: number
+  radius: number
+  barcodeWidth: number
+  barcodeHeight: number
+  paddingTop: number = 0
+  paddingSide: number
 
   // Define the "boxes" that the letters and numbers will be printed in
-  private getNumberOfBoxes(): number {
-    return this.tapeType === 'DLT' ? 6 : 7
-  }
-  private getBoxWidth(): number {
-    return (this.getWidth() - 2 * this.getRadius()) / this.getNumberOfBoxes()
-  }
-  private getBoxHeight(): number {
-    return this.getHeight() - this.getBarcodeHeight() - this.getPaddingTop()
-  }
-  private getRotationOrigin(x: number, y: number) {
+  numberOfBoxes: number
+  boxWidth: number
+  boxHeight: number
+
+  private getRotationOrigin(
+    x: number,
+    y: number,
+  ): { origin: [number, number] } {
     return {
       origin: [
-        this.mmToPt(x + this.getBoxWidth() / 2),
-        this.mmToPt(y + this.getBoxHeight() / 2),
+        this.mmToPt(x + this.boxWidth / 2),
+        this.mmToPt(y + this.boxHeight / 2),
       ],
     }
   }
 
-  private getFillColor(char: string) {
-    const idx = Number(char)
-    if (Number.isInteger(idx)) {
-      return this.colors[idx]
-    }
+  private getFillColor(char: string): [number, number, number] | null {
+    const idx = parseInt(char)
+    return isNaN(idx) ? null : this.colors[idx]
   }
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
-  public async draw(doc: any) {
-    if (this.borders) {
+  /**
+   * Draw the label on the provided pdf document at the specified coordinates
+   * @param doc
+   * @param x
+   * @param y
+   */
+  public async draw(doc: PDFKit.PDFDocument, x: number, y: number) {
+    if (this.design.borders) {
       doc
         .roundedRect(
-          this.mmToPt(this.x),
-          this.mmToPt(this.y),
-          this.mmToPt(this.getWidth()),
-          this.mmToPt(this.getHeight()),
-          this.mmToPt(this.getRadius()),
+          this.mmToPt(x),
+          this.mmToPt(y),
+          this.mmToPt(this.width),
+          this.mmToPt(this.height),
+          this.mmToPt(this.radius),
         )
         .stroke()
     }
 
     doc.font('Helvetica-Bold')
 
-    for (let i = 0; i < this.getNumberOfBoxes(); i++) {
-      const xBox = this.x + this.getRadius() + this.getBoxWidth() * i
+    for (let i = 0; i < this.numberOfBoxes; i++) {
+      const xBox = x + this.radius + this.boxWidth * i
       const yBox =
-        this.y +
-        (this.textPosition === 'top'
-          ? 0
-          : this.getHeight() - this.getBoxHeight())
+        y +
+        (this.design.textPosition === 'top' ? 0 : this.height - this.boxHeight)
 
       let box = doc.rect(
         this.mmToPt(xBox),
         this.mmToPt(yBox),
-        this.mmToPt(this.getBoxWidth()),
-        this.mmToPt(this.getBoxHeight()),
+        this.mmToPt(this.boxWidth),
+        this.mmToPt(this.boxHeight),
       )
       const color = this.getFillColor(this.text[i])
-      if (this.colorized && color) {
+      if (this.design.colorized && color) {
         box.fillAndStroke(color, 'black')
       } else {
         box.stroke()
@@ -140,52 +109,47 @@ export class Label {
 
       let txt, offsetTop
       // Tape type goes in the last box. But not for DLT
-      if (this.tapeType !== 'DLT' && i + 1 === this.getNumberOfBoxes()) {
+      if (this.tapeType !== 'DLT' && i + 1 === this.numberOfBoxes) {
         txt = this.suffix
         offsetTop = 1.5
-        doc.fontSize(this.mmToPt(this.getBoxHeight() - 2))
+        doc.fontSize(this.mmToPt(this.boxHeight - 2))
       } else {
         txt = this.text[i] || ''
         offsetTop = 1
-        if (this.textOrientation === 'vertical') {
-          doc.fontSize(this.mmToPt(this.getBoxHeight()))
+        if (this.design.textOrientation === 'vertical') {
+          doc.fontSize(this.mmToPt(this.boxHeight))
         } else {
-          doc.fontSize(this.mmToPt(this.getBoxHeight() - 1))
+          doc.fontSize(this.mmToPt(this.boxHeight - 1))
         }
       }
 
-      let block
-      if (this.textOrientation === 'vertical') {
-        block = doc.rotate(-90, this.getRotationOrigin(xBox, yBox))
-      } else {
-        block = doc
-      }
+      const block =
+        this.design.textOrientation === 'vertical'
+          ? doc.rotate(-90, this.getRotationOrigin(xBox, yBox))
+          : doc
 
       block
         .fillColor('black')
         .text(txt, this.mmToPt(xBox), this.mmToPt(yBox + offsetTop), {
-          width: this.mmToPt(this.getBoxWidth()),
-          height: this.mmToPt(this.getBoxHeight() - 2),
+          width: this.mmToPt(this.boxWidth),
+          height: this.mmToPt(this.boxHeight - 2),
           align: 'center',
         })
-      if (this.textOrientation === 'vertical') {
+      if (this.design.textOrientation === 'vertical') {
         doc.rotate(90, this.getRotationOrigin(xBox, yBox))
       }
     }
 
     // Finish with the barcode itself
-    let barcode = this.text
-    if (this.tapeType !== 'DLT') {
-      barcode += this.suffix
-    }
+    const barcode = this.text + (this.tapeType === 'DLT' ? '' : this.suffix)
 
     // barcode generation uses a callback, so we wrap it in a promise in order to flatten the call structure
     const image = await new Promise((resolve, reject) => {
-      toBuffer(
+      bwipJs.toBuffer(
         {
           bcid: 'code39',
           text: barcode,
-          height: this.getBarcodeHeight(),
+          height: this.barcodeHeight,
           includetext: false,
         },
         (err: any, png: any) => {
@@ -198,13 +162,12 @@ export class Label {
       )
     })
 
-    const xBox = this.x + this.getPaddingSide()
-    const yBox =
-      this.y + (this.textPosition === 'top' ? this.getBoxHeight() : 0)
+    const xBox = x + this.paddingSide
+    const yBox = y + (this.design.textPosition === 'top' ? this.boxHeight : 0)
 
     doc.image(image, this.mmToPt(xBox), this.mmToPt(yBox), {
-      width: this.mmToPt(this.getBarcodeWidth()),
-      height: this.mmToPt(this.getBarcodeHeight()),
+      width: this.mmToPt(this.barcodeWidth),
+      height: this.mmToPt(this.barcodeHeight),
     })
   }
 

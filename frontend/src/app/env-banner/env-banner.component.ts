@@ -17,7 +17,7 @@ import { AppSettingsService } from '../app-settings.service'
     `
       :host {
         overflow: hidden;
-        position: absolute;
+        position: fixed;
         width: 25rem;
         height: 25rem;
         top: 0;

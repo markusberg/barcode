@@ -35,6 +35,9 @@
           *ngSwitchCase="true"
           class="form-control"
           formControlName="suffix"
+          [readOnly]="label.controls['tapetype'].value !== 'custom'"
+          [class.is-invalid]="label.controls['suffix'].invalid"
+          [class.bg-light]="label.controls['tapetype'].value !== 'custom'"
         />
         <span *ngSwitchCase="false">N/A</span>
       </div>
@@ -42,18 +45,26 @@
 
     <div class="col">
       <div class="form-group">
-        <input class="form-control" formControlName="prefix" />
+        <input
+          class="form-control"
+          formControlName="prefix"
+          [class.is-invalid]="label.controls['prefix'].invalid"
+        />
       </div>
     </div>
 
     <div class="col">
       <div class="form-group">
-        <input class="form-control" formControlName="startno" />
+        <input
+          class="form-control"
+          formControlName="startno"
+          [class.is-invalid]="label.controls['startno'].invalid"
+        />
       </div>
     </div>
 
     <div class="col-3">
-      <div class="inline-form">
+      <div class="d-flex">
         <div class="form-check text-nowrap me-3">
           <input
             class="form-check-input"
@@ -71,6 +82,7 @@
             formControlName="num"
             type="number"
             (blur)="onNumBlur(label)"
+            [class.is-invalid]="label.controls['num'].invalid"
           />
         </div>
       </div>

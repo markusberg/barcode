@@ -12,7 +12,6 @@ await esbuild.build({
   bundle: true,
   sourcemap: true,
   format: 'esm',
-  external: ['pdfkit'],
   banner: {
     js: `
 // BANNER START

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { ILayoutForm } from '../generator.service'
+import { frmLayout } from '../generator.service'
 import { ReactiveFormsModule } from '@angular/forms'
 
 @Component({
@@ -11,5 +11,5 @@ import { ReactiveFormsModule } from '@angular/forms'
   styleUrls: ['./barcode-layout.component.scss'],
 })
 export class BarcodeLayoutComponent {
-  @Input() form: ILayoutForm | null = null
+  @Input() form: frmLayout | null = null
 }

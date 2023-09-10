@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormArray, ReactiveFormsModule } from '@angular/forms'
-import { ILabelForm, GeneratorService } from '../generator.service'
+import { frmLabel, GeneratorService } from '../generator.service'
 
 interface Tapetype {
   name: string
@@ -16,24 +16,19 @@ interface Tapetype {
   styleUrls: ['./barcode-labels.component.scss'],
 })
 export class BarcodeLabelsComponent {
-  @Input() form: FormArray<ILabelForm> | null = null
+  @Input() form: FormArray<frmLabel> | null = null
 
   constructor(private barcodeService: GeneratorService) {}
 
-  ngOnInit() {}
-
-  onTapetypeChange(label: ILabelForm) {
-    switch (label.controls.tapetype.value) {
+  onTapetypeChange(label: frmLabel) {
+    switch (label.controls['tapetype'].value) {
       case 'custom':
-        label.controls.suffix.enable()
         break
       case 'DLT':
-        label.controls.suffix.disable()
-        label.controls.suffix.setValue('xx')
+        label.controls['suffix'].setValue('xx')
         break
       default:
-        label.controls.suffix.disable()
-        label.controls.suffix.setValue(label.controls.tapetype.value)
+        label.controls['suffix'].setValue(label.controls['tapetype'].value)
     }
   }
 
@@ -50,22 +45,13 @@ export class BarcodeLabelsComponent {
     { name: 'Custom...', id: 'custom' },
   ]
 
-  onNumBlur(label: ILabelForm): void {
-    if (!this.isPositiveInt(label.controls.num.value)) {
-      label.controls.fillpage.setValue(true)
-      label.controls.num.setValue(1)
+  onNumBlur(label: frmLabel): void {
+    if (label.controls['num'].invalid) {
+      label.controls['num'].setValue(1)
     }
   }
 
-  isPositiveInt(num: any): boolean {
-    let test = num
-    if (typeof num === 'string') {
-      test = parseInt(num)
-    }
-    return num > 0
-  }
-
-  appendCopy(label: ILabelForm): void {
+  appendCopy(label: frmLabel): void {
     this.form?.push(this.barcodeService.buildLabel({ ...label.getRawValue() }))
   }
 

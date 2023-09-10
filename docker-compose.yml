@@ -6,6 +6,6 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      - ./.env:/app/.env
+      - .env:/app/.env:Z
     ports:
       - 3000:3000

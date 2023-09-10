@@ -9,12 +9,14 @@ import dotenv from 'dotenv'
 import { NodeEnv, NodeEnvSchema } from './interfaces/node-env'
 
 const APP_ROOT_DIR = join(__dirname, '..', '..')
-const pathToEnv = resolve(process.cwd(), '..', '.env')
+const pathToEnv = resolve(APP_ROOT_DIR, '.env')
 let file: string
+
+console.log(`APP_ROOT_DIR: ${APP_ROOT_DIR}`)
 
 try {
   if (!existsSync(pathToEnv)) {
-    console.log(".env file doesn't exist, ", pathToEnv)
+    console.log(".env file doesn't exist: ", pathToEnv)
     process.exit()
   }
   file = readFileSync(pathToEnv).toString()

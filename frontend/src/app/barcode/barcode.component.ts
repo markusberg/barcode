@@ -1,8 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component, OnDestroy } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormBuilder } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
-import { ReplaySubject, Observable, map, catchError, EMPTY, tap } from 'rxjs'
+import {
+  ReplaySubject,
+  Observable,
+  map,
+  catchError,
+  EMPTY,
+  tap,
+  switchMap,
+  filter,
+} from 'rxjs'
 import { GeneratorService } from '../generator.service'
 import { BarcodeLabelsComponent } from '../barcode-labels/barcode-labels.component'
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap'
@@ -22,7 +31,7 @@ import { BarcodeLayoutComponent } from '../barcode-layout/barcode-layout.compone
   templateUrl: './barcode.component.html',
   styleUrls: ['./barcode.component.scss'],
 })
-export class BarcodeComponent implements OnInit, OnDestroy {
+export class BarcodeComponent implements OnDestroy {
   isLoading: boolean = false
   error$: ReplaySubject<any> = new ReplaySubject()
   errorExpanded = false
@@ -41,7 +50,6 @@ export class BarcodeComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
   ) {}
 
-  ngOnInit() {}
   ngOnDestroy(): void {
     this.revokePdfUrl()
   }
@@ -53,31 +61,30 @@ export class BarcodeComponent implements OnInit, OnDestroy {
     }
   }
 
-  pdf$: Observable<SafeUrl> | null = null
+  generate$ = new ReplaySubject<boolean>()
 
-  generatePdf() {
-    this.revokePdfUrl()
-    this.error$.next(null)
-    this.isLoading = true
-
-    if (this.form.invalid) {
-      return
-    }
-    this.pdf$ = this.generatorService
-      .generatePdf(this.form.getRawValue() as any)
-      .pipe(
-        map((blob) => {
-          this.pdfUrl = URL.createObjectURL(blob)
-          return this.domSanitizer.bypassSecurityTrustResourceUrl(this.pdfUrl)
-        }),
+  pdf$: Observable<SafeUrl> = this.generate$.pipe(
+    filter(() => this.form.valid),
+    tap(() => {
+      this.revokePdfUrl()
+      this.error$.next(null)
+      this.isLoading = true
+    }),
+    map(() => this.form.getRawValue()),
+    switchMap((value) =>
+      this.generatorService.generatePdf(value).pipe(
+        map((blob) => URL.createObjectURL(blob)),
+        tap((url) => (this.pdfUrl = url)),
+        map((url) => this.domSanitizer.bypassSecurityTrustResourceUrl(url)),
         catchError((err) => {
           this.isLoading = false
           this.error$.next(err)
           return EMPTY
         }),
         tap(() => (this.isLoading = false)),
-      )
-  }
+      ),
+    ),
+  )
 
   setPageLayout(tapetype: 'LTO' | 'DLT' = 'LTO'): void {
     const layout = this.generatorService.defaultLayout[tapetype]

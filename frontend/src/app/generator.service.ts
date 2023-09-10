@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
-  UntypedFormControl,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms'
 
@@ -14,9 +16,9 @@ import { Observable } from 'rxjs'
 
 type Formify<T> = FormGroup<{ [key in keyof T]: FormControl<T[key]> }>
 
-export type IDesignForm = Formify<Design>
-export type ILabelForm = Formify<Label>
-export type ILayoutForm = Formify<Layout>
+export type frmDesign = Formify<Design>
+export type frmLabel = Formify<Label>
+export type frmLayout = Formify<Layout>
 
 @Injectable({ providedIn: 'root' })
 export class GeneratorService {
@@ -67,7 +69,7 @@ export class GeneratorService {
     },
   }
 
-  getDesignForm(): IDesignForm {
+  getDesignForm(): frmDesign {
     return this.fb.nonNullable.group({
       borders: this.defaultDesign.borders,
       colorized: this.defaultDesign.colorized,
@@ -76,11 +78,11 @@ export class GeneratorService {
     })
   }
 
-  getLabelsArrayForm(): FormArray<ILabelForm> {
+  getLabelsArrayForm(): FormArray<frmLabel> {
     return this.fb.array([this.buildLabel(this.defaultLabel)])
   }
 
-  getLayoutForm(tapetype: string): ILayoutForm {
+  getLayoutForm(tapetype: 'DLT' | 'LTO'): frmLayout {
     const layout = this.defaultLayout[tapetype]
     return this.fb.nonNullable.group({
       pagesize: [layout.pagesize],
@@ -93,18 +95,28 @@ export class GeneratorService {
     })
   }
 
-  buildLabel(label: Label): ILabelForm {
+  buildLabel(label: Label): frmLabel {
     return this.fb.nonNullable.group({
       tapetype: [label.tapetype, [Validators.required]],
       prefix: [label.prefix, [Validators.required]],
       startno: [label.startno, [Validators.required]],
-      suffix: new UntypedFormControl(
-        { value: label.suffix, disabled: label.tapetype !== 'custom' },
-        [Validators.required],
-      ),
-
+      suffix: [label.suffix, [Validators.required]],
       fillpage: label.fillpage,
-      num: label.num,
+      num: [
+        label.num,
+        [Validators.min(1), Validators.max(999), this.positiveIntValidator()],
+      ],
     })
+  }
+
+  positiveIntValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const parsed = parseInt(control.value)
+
+      if (parsed === control.value) {
+        return null
+      }
+      return { invalidInt: true }
+    }
   }
 }
