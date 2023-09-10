@@ -19,9 +19,9 @@ export type ILabelForm = Formify<Label>
 export type ILayoutForm = Formify<Layout>
 
 @Injectable({ providedIn: 'root' })
-export class BarcodeService {
+export class GeneratorService {
   constructor(private fb: FormBuilder, private httpClient: HttpClient) {}
-  url = `api/barcodes`
+  url = `api/generator`
 
   generatePdf(barcode: Barcode): Observable<Blob> {
     return this.httpClient.post(this.url, barcode, {

@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing'
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 
-import { BarcodeService } from './barcode.service'
+import { GeneratorService } from './generator.service'
 
 describe('BarcodeService', () => {
-  let service: BarcodeService
+  let service: GeneratorService
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
     })
-    service = TestBed.inject(BarcodeService)
+    service = TestBed.inject(GeneratorService)
   })
 
   it('should be created', () => {

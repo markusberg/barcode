@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IDesignForm } from '../barcode.service'
+import { IDesignForm } from '../generator.service'
 import { ReactiveFormsModule } from '@angular/forms'
 
 @Component({

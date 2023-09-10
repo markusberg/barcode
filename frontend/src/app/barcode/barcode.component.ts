@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { FormBuilder } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import { ReplaySubject, Observable, map, catchError, EMPTY, tap } from 'rxjs'
-import { BarcodeService } from '../barcode.service'
+import { GeneratorService } from '../generator.service'
 import { BarcodeLabelsComponent } from '../barcode-labels/barcode-labels.component'
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap'
 import { BarcodeDesignComponent } from '../barcode-design/barcode-design.component'
@@ -28,15 +28,15 @@ export class BarcodeComponent implements OnInit, OnDestroy {
   errorExpanded = false
 
   form = this.formBuilder.group({
-    design: this.barcodeService.getDesignForm(),
-    labels: this.barcodeService.getLabelsArrayForm(),
-    layout: this.barcodeService.getLayoutForm('LTO'),
+    design: this.generatorService.getDesignForm(),
+    labels: this.generatorService.getLabelsArrayForm(),
+    layout: this.generatorService.getLayoutForm('LTO'),
   })
 
   pdfUrl: string = ''
 
   constructor(
-    private barcodeService: BarcodeService,
+    private generatorService: GeneratorService,
     private domSanitizer: DomSanitizer,
     private formBuilder: FormBuilder,
   ) {}
@@ -63,7 +63,7 @@ export class BarcodeComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return
     }
-    this.pdf$ = this.barcodeService
+    this.pdf$ = this.generatorService
       .generatePdf(this.form.getRawValue() as any)
       .pipe(
         map((blob) => {
@@ -80,7 +80,7 @@ export class BarcodeComponent implements OnInit, OnDestroy {
   }
 
   setPageLayout(tapetype: 'LTO' | 'DLT' = 'LTO'): void {
-    const layout = this.barcodeService.defaultLayout[tapetype]
+    const layout = this.generatorService.defaultLayout[tapetype]
     this.form.get('layout')?.setValue(layout)
   }
 }

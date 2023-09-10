@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { ILayoutForm } from '../barcode.service'
+import { ILayoutForm } from '../generator.service'
 import { ReactiveFormsModule } from '@angular/forms'
 
 @Component({

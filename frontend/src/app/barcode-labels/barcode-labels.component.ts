@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormArray, ReactiveFormsModule } from '@angular/forms'
-import { ILabelForm, BarcodeService } from '../barcode.service'
+import { ILabelForm, GeneratorService } from '../generator.service'
 
 interface Tapetype {
   name: string
@@ -18,7 +18,7 @@ interface Tapetype {
 export class BarcodeLabelsComponent {
   @Input() form: FormArray<ILabelForm> | null = null
 
-  constructor(private barcodeService: BarcodeService) {}
+  constructor(private barcodeService: GeneratorService) {}
 
   ngOnInit() {}
 

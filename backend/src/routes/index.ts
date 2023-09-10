@@ -2,6 +2,8 @@ import { Router } from 'express'
 
 export const router = Router()
 
-import { router as barcodes } from './barcodes'
+import { router as appSettings } from './app-settings'
+import { router as generator } from './generator'
 
-router.use('/barcodes', barcodes)
+router.use('/app-settings', appSettings)
+router.use('/generator', generator)

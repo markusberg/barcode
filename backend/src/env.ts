@@ -6,6 +6,7 @@ import { join, resolve } from 'node:path'
 import { existsSync, readFileSync } from 'node:fs'
 import { z } from 'zod'
 import dotenv from 'dotenv'
+import { NodeEnv, NodeEnvSchema } from './interfaces/node-env'
 
 const APP_ROOT_DIR = join(__dirname, '..', '..')
 const pathToEnv = resolve(process.cwd(), '..', '.env')
@@ -32,12 +33,8 @@ const envSchema = z.object({
   SERVER_PREFIX: z.string().default(''),
 })
 
-const NodeEnvSchema = z
-  .enum(['production', 'testing', 'development'])
-  .default('development')
-
 let env: z.infer<typeof envSchema>
-let nodeEnv: z.infer<typeof NodeEnvSchema>
+let nodeEnv: NodeEnv
 
 try {
   env = envSchema.parse(parsed)
