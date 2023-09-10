@@ -1,0 +1,6 @@
+**/node_modules
+npm-debug.log
+backend/dist
+frontend/dist
+.env
+frontend/.angular
