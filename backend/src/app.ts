@@ -6,8 +6,8 @@ import compression from 'compression'
 import express, { Request, Response } from 'express'
 import morgan from 'morgan'
 
-import { nodeEnv, APP_ROOT_DIR, env } from './env'
-import { router as api } from './routes'
+import { nodeEnv, APP_ROOT_DIR, env } from './env.js'
+import { router as api } from './routes/index.js'
 
 const app = express()
 

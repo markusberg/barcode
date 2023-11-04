@@ -1,7 +1,8 @@
 import { Request, Response, Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { generatorService } from '../services/generator.service'
-import { BarcodeSchema } from '../interfaces/barcode'
+
+import { generatorService } from '../services/generator.service.js'
+import { BarcodeSchema } from '../interfaces/barcode.js'
 
 export const router = Router()
 

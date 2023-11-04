@@ -1,5 +1,5 @@
-import { Barcode } from '../interfaces/barcode'
-import { Document } from './document.class'
+import { Barcode } from '../interfaces/barcode.js'
+import { Document } from './document.class.js'
 
 class GeneratorService {
   public async generatePdf(barcode: Barcode): Promise<PDFKit.PDFDocument> {

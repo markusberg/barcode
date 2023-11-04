@@ -1,9 +1,9 @@
 import { Router } from 'express'
 
-export const router = Router()
+import { router as appSettings } from './app-settings.js'
+import { router as generator } from './generator.js'
 
-import { router as appSettings } from './app-settings'
-import { router as generator } from './generator'
+export const router = Router()
 
 router.use('/app-settings', appSettings)
 router.use('/generator', generator)

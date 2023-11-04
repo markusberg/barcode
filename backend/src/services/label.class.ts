@@ -1,7 +1,6 @@
-import { Design } from '../interfaces/barcode'
+import BwipJs from 'bwip-js'
 
-// FIXME: esm is causing problems :-/
-const bwipJs = require('bwip-js')
+import { Design } from '../interfaces/barcode.js'
 
 export class Label {
   private colors: [number, number, number][] = [
@@ -145,7 +144,7 @@ export class Label {
 
     // barcode generation uses a callback, so we wrap it in a promise in order to flatten the call structure
     const image = await new Promise((resolve, reject) => {
-      bwipJs.toBuffer(
+      BwipJs.toBuffer(
         {
           bcid: 'code39',
           text: barcode,

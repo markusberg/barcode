@@ -1,6 +1,7 @@
 import PDFDocument from 'pdfkit'
-import { Label } from './label.class'
-import { Design, LabelDef, Layout, Series } from '../interfaces/barcode'
+
+import { Label } from './label.class.js'
+import { Design, LabelDef, Layout, Series } from '../interfaces/barcode.js'
 
 export class Document {
   doc: PDFKit.PDFDocument

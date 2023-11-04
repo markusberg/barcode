@@ -1,7 +1,7 @@
-import { env } from './env'
+import { createServer } from 'node:http'
 
-import { getApp } from './app'
-import { createServer } from 'http'
+import { env } from './env.js'
+import { getApp } from './app.js'
 
 const port = env.PORT
 

@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { nodeEnv } from '../env'
+
+import { nodeEnv } from '../env.js'
 
 export const router = Router()
 

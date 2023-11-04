@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ES2022",
     "sourceMap": true,
     "lib": ["ES2022", "DOM"],
@@ -11,15 +11,13 @@
 
     "strict": true,
     "declaration": true,
-    "removeComments": false,
     "incremental": true,
 
     "allowJs": false,
     "preserveConstEnums": true,
 
     "outDir": "./dist",
-    "baseUrl": ".",
-
-    "types": ["jest"]
-  }
+    "baseUrl": "."
+  },
+  "include": ["src/**/*"]
 }
