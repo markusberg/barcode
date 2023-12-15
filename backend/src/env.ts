@@ -1,7 +1,7 @@
 import { dirname, join, resolve } from 'node:path'
 import { z } from 'zod'
 import { NodeEnv, NodeEnvSchema } from './interfaces/node-env.js'
-import { loadAndParse } from './env-parser.js'
+import { loadAndParse } from '@markusberg/key-value-parser'
 import { fileURLToPath } from 'node:url'
 
 const stringToInt = z.string().transform((val) => parseInt(val))
