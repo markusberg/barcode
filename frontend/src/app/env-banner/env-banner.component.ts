@@ -1,18 +1,21 @@
 import { Component } from '@angular/core'
-import { CommonModule } from '@angular/common'
 import { filter } from 'rxjs'
 import { AppSettingsService } from '../app-settings.service'
+import { AsyncPipe } from '@angular/common'
 
 @Component({
   selector: 'app-env-banner',
   standalone: true,
-  imports: [CommonModule],
-  template: `<div
-    *ngIf="nodeEnv$ | async as nodeEnv"
-    class="text-uppercase border border-dark py-2 bg-warning opacity-75 text-center w-100 fw-bold fs-2 px-3 shadow"
-  >
-    {{ nodeEnv }}
-  </div>`,
+  imports: [AsyncPipe],
+  template: `
+    @if (nodeEnv$ | async; as nodeEnv) {
+      <div
+        class="text-uppercase border border-dark py-2 bg-warning opacity-75 text-center w-100 fw-bold fs-2 px-3 shadow"
+      >
+        {{ nodeEnv }}
+      </div>
+    }
+  `,
   styles: [
     `
       :host {

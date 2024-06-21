@@ -9,8 +9,11 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces",
+    "build:buildah": "buildah bud --tag=$npm_package_name .",
+    "build:podman": "podman save $npm_package_name | ssh -C kelvin.nu 'podman load'",
     "build:image": "docker build --tag $npm_package_name .",
-    "prep": "npm install && husky install && chmod ug+x .husky/*",
+    "prep": "npm install && husky && chmod ug+x .husky/*",
+    "publish": "npm run build:buildah && npm run build:podman",
     "test": "npm run test --workspaces"
   },
   "repository": {
@@ -31,8 +34,8 @@
   },
   "homepage": "https://github.com/markusberg/barcode#readme",
   "dependencies": {
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.1.1"
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
+    "prettier": "^3.3.2"
   }
 }

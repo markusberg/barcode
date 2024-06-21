@@ -143,7 +143,7 @@ export class Label {
     const barcode = this.text + (this.tapeType === 'DLT' ? '' : this.suffix)
 
     // barcode generation uses a callback, so we wrap it in a promise in order to flatten the call structure
-    const image = await new Promise((resolve, reject) => {
+    const image: Buffer = await new Promise((resolve, reject) => {
       BwipJs.toBuffer(
         {
           bcid: 'code39',
@@ -151,7 +151,7 @@ export class Label {
           height: this.barcodeHeight,
           includetext: false,
         },
-        (err: any, png: any) => {
+        (err: string | Error, png: Buffer) => {
           if (err) {
             reject(err)
           } else {
