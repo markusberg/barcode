@@ -22,7 +22,10 @@ export type frmLayout = Formify<Layout>
 
 @Injectable({ providedIn: 'root' })
 export class GeneratorService {
-  constructor(private fb: FormBuilder, private httpClient: HttpClient) {}
+  constructor(
+    private fb: FormBuilder,
+    private httpClient: HttpClient,
+  ) {}
   url = `api/generator`
 
   generatePdf(barcode: Barcode): Observable<Blob> {

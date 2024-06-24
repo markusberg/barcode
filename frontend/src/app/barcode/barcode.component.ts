@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import { Component, OnDestroy, signal } from '@angular/core'
+import { AsyncPipe, JsonPipe, NgClass } from '@angular/common'
 import { FormBuilder } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import {
@@ -22,19 +22,21 @@ import { BarcodeLayoutComponent } from '../barcode-layout/barcode-layout.compone
   selector: 'app-barcode',
   standalone: true,
   imports: [
-    CommonModule,
+    AsyncPipe,
     BarcodeDesignComponent,
     BarcodeLabelsComponent,
     BarcodeLayoutComponent,
+    JsonPipe,
     NgbNavModule,
+    NgClass,
   ],
   templateUrl: './barcode.component.html',
   styleUrls: ['./barcode.component.scss'],
 })
 export class BarcodeComponent implements OnDestroy {
-  isLoading: boolean = false
-  error$: ReplaySubject<any> = new ReplaySubject()
-  errorExpanded = false
+  isLoading = signal<boolean>(false)
+  error = signal<any>(null)
+  errorExpanded = signal<boolean>(false)
 
   form = this.formBuilder.group({
     design: this.generatorService.getDesignForm(),
@@ -42,7 +44,11 @@ export class BarcodeComponent implements OnDestroy {
     layout: this.generatorService.getLayoutForm('LTO'),
   })
 
-  pdfUrl: string = ''
+  toggleError() {
+    this.errorExpanded.update((val) => !val)
+  }
+
+  pdfUrl = signal<string | null>(null)
 
   constructor(
     private generatorService: GeneratorService,
@@ -55,9 +61,10 @@ export class BarcodeComponent implements OnDestroy {
   }
 
   revokePdfUrl() {
-    if (this.pdfUrl) {
-      URL.revokeObjectURL(this.pdfUrl)
-      this.pdfUrl = ''
+    const url = this.pdfUrl()
+    if (url) {
+      URL.revokeObjectURL(url)
+      this.pdfUrl.set(null)
     }
   }
 
@@ -67,21 +74,21 @@ export class BarcodeComponent implements OnDestroy {
     filter(() => this.form.valid),
     tap(() => {
       this.revokePdfUrl()
-      this.error$.next(null)
-      this.isLoading = true
+      this.error.set(null)
+      this.isLoading.set(true)
     }),
     map(() => this.form.getRawValue()),
     switchMap((value) =>
       this.generatorService.generatePdf(value).pipe(
         map((blob) => URL.createObjectURL(blob)),
-        tap((url) => (this.pdfUrl = url)),
+        tap((url) => this.pdfUrl.set(url)),
         map((url) => this.domSanitizer.bypassSecurityTrustResourceUrl(url)),
         catchError((err) => {
-          this.isLoading = false
-          this.error$.next(err)
+          this.isLoading.set(false)
+          this.error.set(err)
           return EMPTY
         }),
-        tap(() => (this.isLoading = false)),
+        tap(() => this.isLoading.set(false)),
       ),
     ),
   )

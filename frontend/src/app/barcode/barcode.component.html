@@ -53,47 +53,55 @@
     <button
       class="btn btn-primary"
       (click)="generate$.next(true)"
-      [disabled]="form.invalid || isLoading"
+      [disabled]="form.invalid || isLoading()"
     >
-      <span *ngIf="!isLoading">
-        Generate barcodes
-        <i class="bi bi-file-earmark-pdf ms-1"></i>
-      </span>
-      <span *ngIf="isLoading">
-        <i class="bi bi-arrow-repeat bi-spin me-1"></i>Please stand by...</span
-      >
+      @if (isLoading()) {
+        <span>
+          <i class="bi bi-arrow-repeat bi-spin me-1"></i>Please stand
+          by...</span
+        >
+      } @else {
+        <span>
+          Generate barcodes
+          <i class="bi bi-file-earmark-pdf ms-1"></i>
+        </span>
+      }
     </button>
   </div>
   <p>Latest update: 2024-06-21</p>
 
-  <ng-container *ngIf="{ pdf: pdf$ | async, error: error$ | async } as vm">
-    <div *ngIf="vm.pdf && !vm.error">
-      <iframe [src]="vm.pdf" class="w-100 border"></iframe>
-    </div>
-
-    <div class="card border-danger" *ngIf="vm.error">
-      <div class="card-header bg-danger text-white">
-        Unable to generate barcodes :-/
+  @if ({ pdf: pdf$ | async }; as vm) {
+    @if (vm.pdf && !error()) {
+      <div>
+        <iframe [src]="vm.pdf" class="w-100 border"></iframe>
       </div>
-      <div class="card-body">
-        Something went wrong while generating the barcodes. Sorry about that.
-        Please try again...
-        <div class="card bg-light mt-3">
-          <div
-            class="card-header clickable"
-            (click)="errorExpanded = !errorExpanded"
-          >
-            Details
-            <i
-              class="ms-3 bi"
-              [ngClass]="errorExpanded ? 'bi-chevron-down' : 'bi-chevron-right'"
-            ></i>
-          </div>
-          <div class="card-body" *ngIf="errorExpanded">
-            <pre>{{ vm.error | json }}</pre>
+    }
+    @if (error()) {
+      <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+          Unable to generate barcodes :-/
+        </div>
+        <div class="card-body">
+          Something went wrong while generating the barcodes. Sorry about that.
+          Please try again...
+          <div class="card bg-light mt-3">
+            <div class="card-header clickable" (click)="toggleError()">
+              Details
+              <i
+                class="ms-3 bi"
+                [ngClass]="
+                  errorExpanded() ? 'bi-chevron-down' : 'bi-chevron-right'
+                "
+              ></i>
+            </div>
+            @if (errorExpanded()) {
+              <div class="card-body">
+                <pre>{{ error() | json }}</pre>
+              </div>
+            }
           </div>
         </div>
       </div>
-    </div>
-  </ng-container>
+    }
+  }
 </div>

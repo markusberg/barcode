@@ -8,4 +8,4 @@ services:
     volumes:
       - .env:/app/.env:Z
     ports:
-      - 3000:3000
+      - 3100:3100

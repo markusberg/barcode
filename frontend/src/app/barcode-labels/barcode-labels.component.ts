@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import { Component, input } from '@angular/core'
+
 import { FormArray, ReactiveFormsModule } from '@angular/forms'
 import { frmLabel, GeneratorService } from '../generator.service'
 
@@ -11,12 +11,11 @@ interface Tapetype {
 @Component({
   selector: 'app-barcode-labels',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './barcode-labels.component.html',
-  styleUrls: ['./barcode-labels.component.scss'],
 })
 export class BarcodeLabelsComponent {
-  @Input() form: FormArray<frmLabel> | null = null
+  form = input.required<FormArray<frmLabel>>()
 
   constructor(private barcodeService: GeneratorService) {}
 
@@ -52,14 +51,14 @@ export class BarcodeLabelsComponent {
   }
 
   appendCopy(label: frmLabel): void {
-    this.form?.push(this.barcodeService.buildLabel({ ...label.getRawValue() }))
+    this.form().push(this.barcodeService.buildLabel({ ...label.getRawValue() }))
   }
 
   removeLabels(idx: number): void {
-    this.form?.removeAt(idx)
+    this.form().removeAt(idx)
   }
 
   isLast(idx: number): boolean {
-    return idx === (this.form?.length || 0) - 1
+    return idx === this.form().length - 1
   }
 }
