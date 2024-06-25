@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing'
 
 import { BarcodeLayoutComponent } from './barcode-layout.component'
 import { GeneratorService } from '../generator.service'
-import { HttpClientTestingModule } from '@angular/common/http/testing'
+import { provideHttpClientTesting } from '@angular/common/http/testing'
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 describe('BarcodeLayoutComponent', () => {
   let component: BarcodeLayoutComponent
@@ -10,8 +11,12 @@ describe('BarcodeLayoutComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [BarcodeLayoutComponent, HttpClientTestingModule],
-      providers: [GeneratorService],
+      imports: [BarcodeLayoutComponent],
+      providers: [
+        GeneratorService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     })
 
     const generatorService = TestBed.inject(GeneratorService)

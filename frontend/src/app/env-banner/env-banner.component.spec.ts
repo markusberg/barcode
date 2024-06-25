@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
 import { EnvBannerComponent } from './env-banner.component'
-import { HttpClientTestingModule } from '@angular/common/http/testing'
+import { provideHttpClientTesting } from '@angular/common/http/testing'
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 describe('EnvBannerComponent', () => {
   let component: EnvBannerComponent
@@ -9,7 +10,11 @@ describe('EnvBannerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [EnvBannerComponent, HttpClientTestingModule],
+      imports: [EnvBannerComponent],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     })
     fixture = TestBed.createComponent(EnvBannerComponent)
     component = fixture.componentInstance

@@ -27,33 +27,23 @@ app.disable('x-powered-by')
 app.use(cors())
 app.use(compression())
 
-// error handlers
-if (nodeEnv === 'production') {
-  // production error handler
-  // no stacktraces leaked to user
-  app.use((err: any, req: any, res: any, next: any) => {
-    res.status(err.status || 500)
-    res.render('error', {
-      message: err.message,
-      error: {},
-    })
+const isProduction = nodeEnv === 'production'
+
+// no stacktraces leaked to user in production env
+app.use((err: any, _req: any, res: any, _next: any) => {
+  res.status(err.status || 500)
+
+  const error = isProduction ? {} : err
+  res.render('error', {
+    message: err.message,
+    error,
   })
-} else {
-  // development error handler
-  // will print stacktrace
-  app.use((err: any, req: any, res: any, next: any) => {
-    res.status(err.status || 500)
-    res.render('error', {
-      message: err.message,
-      error: err,
-    })
-  })
-}
+})
 
 /**
  * Define routes
  */
-const pathFrontendDist = join(APP_ROOT_DIR, 'frontend', 'dist')
+const pathFrontendDist = join(APP_ROOT_DIR, 'frontend', 'dist', 'browser')
 console.log(`Path to frontend dist:`, pathFrontendDist)
 app.use(env.SERVER_PREFIX, express.static(pathFrontendDist, { index: false }))
 app.use(`${env.SERVER_PREFIX}/api`, api)
