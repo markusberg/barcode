@@ -10,8 +10,8 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "build:buildah": "buildah bud --tag=$npm_package_name .",
-    "build:publish": "podman save $npm_package_name | ssh -C fahrenheit.kelvin.nu 'docker load'",
-    "build:image": "docker build --tag $npm_package_name .",
+    "build:publish": "podman save $npm_package_name | ssh -C kelvin.nu 'docker load'",
+    "build:docker": "docker build --tag $npm_package_name .",
     "prep": "npm install && husky && chmod ug+x .husky/*",
     "publish": "npm run build:buildah && npm run build:publish",
     "test": "npm run test --workspaces"

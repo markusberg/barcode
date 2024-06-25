@@ -1,11 +1,9 @@
-version: '3'
-
 services:
   barcode:
-    image: 'barcode:latest'
+    image: 'localhost/barcode:latest'
     environment:
       - NODE_ENV=production
     volumes:
-      - .env:/app/.env:Z
+      - .env:/app/.env
     ports:
-      - 3100:3100
+      - 127.0.0.1:3110:3110
