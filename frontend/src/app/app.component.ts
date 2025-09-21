@@ -9,7 +9,6 @@ import { EnvBannerComponent } from './env-banner/env-banner.component'
     <div class="flex-grow-1 overflow-auto py-3">
       <router-outlet />
     </div>`,
-  standalone: true,
   imports: [EnvBannerComponent, MenubarComponent, RouterModule],
 })
 export class AppComponent {

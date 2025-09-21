@@ -10,7 +10,6 @@ interface Tapetype {
 
 @Component({
   selector: 'app-barcode-labels',
-  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './barcode-labels.component.html',
 })

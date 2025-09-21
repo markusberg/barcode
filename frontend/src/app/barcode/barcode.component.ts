@@ -20,7 +20,6 @@ import { BarcodeLayoutComponent } from '../barcode-layout/barcode-layout.compone
 
 @Component({
   selector: 'app-barcode',
-  standalone: true,
   imports: [
     AsyncPipe,
     BarcodeDesignComponent,
@@ -31,7 +30,13 @@ import { BarcodeLayoutComponent } from '../barcode-layout/barcode-layout.compone
     NgClass,
   ],
   templateUrl: './barcode.component.html',
-  styleUrls: ['./barcode.component.scss'],
+  styles: [
+    `
+      iframe {
+        height: 1000px;
+      }
+    `,
+  ],
 })
 export class BarcodeComponent implements OnDestroy {
   isLoading = signal<boolean>(false)
