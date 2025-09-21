@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms'
 
 @Component({
   selector: 'app-barcode-design',
-  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './barcode-design.component.html',
 })

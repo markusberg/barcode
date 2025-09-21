@@ -5,7 +5,6 @@ import { AsyncPipe } from '@angular/common'
 
 @Component({
   selector: 'app-env-banner',
-  standalone: true,
   imports: [AsyncPipe],
   template: `
     @if (nodeEnv$ | async; as nodeEnv) {
