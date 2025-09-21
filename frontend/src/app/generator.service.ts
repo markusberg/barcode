@@ -11,7 +11,12 @@ import {
   Validators,
 } from '@angular/forms'
 
-import { Barcode, Design, Label, Layout } from '@interfaces/barcode'
+import {
+  Barcode,
+  Design,
+  Label,
+  Layout,
+} from '../../../backend/dist/interfaces/barcode.js'
 import { Observable } from 'rxjs'
 
 type Formify<T> = FormGroup<{ [key in keyof T]: FormControl<T[key]> }>

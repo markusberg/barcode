@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
-import { NodeEnv } from '@interfaces/node-env'
+import { NodeEnv } from '../../../backend/dist/interfaces/node-env.js'
 import { HttpClient } from '@angular/common/http'
 
 @Injectable({ providedIn: 'root' })
