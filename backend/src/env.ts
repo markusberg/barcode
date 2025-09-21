@@ -1,8 +1,10 @@
 import { dirname, join, resolve } from 'node:path'
-import { z } from 'zod'
-import { NodeEnv, NodeEnvSchema } from './interfaces/node-env.js'
-import { loadAndParse } from '@markusberg/key-value-parser'
 import { fileURLToPath } from 'node:url'
+
+import { z } from 'zod'
+import { loadAndParse } from '@markusberg/key-value-parser'
+
+import { type NodeEnv, NodeEnvSchema } from './interfaces/node-env.js'
 
 const stringToInt = z.string().transform((val) => parseInt(val))
 const EnvSchema = z.object({

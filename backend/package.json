@@ -4,38 +4,35 @@
   "description": "Backend of barcode generator",
   "type": "module",
   "scripts": {
-    "build": "npm run build:prep && npm run build:tsc",
-    "build:prep": "mkdir -p dist && cp -r src/views dist/views",
-    "build:tsc": "tsc -p ./tsconfig.prod.json",
+    "build": "npm run build:prep && npm run build:prod",
+    "build:prep": "mkdir -p dist && rm -fr dist/views && cp -r src/views dist/views",
+    "build:prod": "tsc -p ./tsconfig.prod.json",
+    "clean": "rm -rf ./dist",
     "debug": "nodemon -e ts -w ./src --exec 'npm run build && node --enable-source-maps --inspect ./dist/www.js'",
-    "test": "echo vitest run --coverage",
-    "test:watch": "vitest watch",
-    "test:watch:coverage": "vitest watch --coverage"
+    "test": "echo no tests yet"
   },
   "author": "Markus Berg <markus@kelvin.nu>",
   "license": "Apache-2.0",
   "dependencies": {
     "@markusberg/key-value-parser": "^0.3.0",
-    "bwip-js": "^4.4.0",
-    "compression": "^1.7.4",
+    "bwip-js": "^4.7.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
+    "express": "^5.1.0",
     "http-status-codes": "^2.3.0",
-    "morgan": "^1.10.0",
-    "pdfkit": "^0.15.0",
+    "morgan": "^1.10.1",
+    "pdfkit": "^0.17.2",
     "pug": "^3.0.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/compression": "^1.7.5",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/morgan": "^1.9.9",
-    "@types/node": "^20.14.6",
-    "@types/pdfkit": "^0.13.4",
-    "@vitest/coverage-v8": "^1.6.0",
-    "nodemon": "^3.1.4",
-    "typescript": "~5.4.5",
-    "vitest": "^1.6.0"
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^22.18.6",
+    "@types/pdfkit": "^0.17.3",
+    "nodemon": "^3.1.10",
+    "typescript": "~5.9.2"
   }
 }

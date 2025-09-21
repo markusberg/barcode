@@ -1,6 +1,6 @@
 import BwipJs from 'bwip-js'
 
-import { Design } from '../interfaces/barcode.js'
+import type { Design } from '../interfaces/barcode.js'
 
 export class Label {
   private colors: [number, number, number][] = [
@@ -16,12 +16,17 @@ export class Label {
     [113, 88, 128],
   ]
 
-  constructor(
-    private design: Design,
-    private tapeType: string,
-    private suffix: string,
-    private text: string,
-  ) {
+  design: Design
+  tapeType: string
+  suffix: string
+  text: string
+
+  constructor(design: Design, tapeType: string, suffix: string, text: string) {
+    this.design = design
+    this.tapeType = tapeType
+    this.suffix = suffix
+    this.text = text
+
     this.width = this.tapeType === 'DLT' ? 55 : 76.2
     this.height = this.tapeType === 'DLT' ? 21 : 15.875
     this.radius = this.tapeType === 'DLT' ? 0 : 2.5

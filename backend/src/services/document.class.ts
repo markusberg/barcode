@@ -1,13 +1,19 @@
 import PDFDocument from 'pdfkit'
 
 import { Label } from './label.class.js'
-import { Design, LabelDef, Layout, Series } from '../interfaces/barcode.js'
+import type { Design, LabelDef, Layout, Series } from '../interfaces/barcode.js'
 
 export class Document {
   doc: PDFKit.PDFDocument
   labelsSoFar: number = 0
 
-  constructor(private design: Design, private layout: Layout) {
+  design: Design
+  layout: Layout
+
+  constructor(design: Design, layout: Layout) {
+    this.design = design
+    this.layout = layout
+
     this.doc = new PDFDocument({
       size: this.layout.pagesize,
       margins: {

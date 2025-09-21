@@ -12,9 +12,10 @@
     "strict": true,
     "declaration": true,
     "incremental": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
 
     "allowJs": false,
-    "preserveConstEnums": true,
 
     "outDir": "./dist",
     "baseUrl": "."
