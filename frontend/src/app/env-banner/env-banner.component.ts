@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { filter } from 'rxjs'
 import { AppSettingsService } from '../app-settings.service'
 import { AsyncPipe } from '@angular/common'
@@ -36,8 +36,9 @@ import { AsyncPipe } from '@angular/common'
   ],
 })
 export class EnvBannerComponent {
-  constructor(private appSettingsService: AppSettingsService) {}
-  nodeEnv$ = this.appSettingsService
+  #appSettingsService = inject(AppSettingsService)
+
+  nodeEnv$ = this.#appSettingsService
     .getNodeEnv()
     .pipe(filter((nodeEnv) => nodeEnv !== 'production'))
 }

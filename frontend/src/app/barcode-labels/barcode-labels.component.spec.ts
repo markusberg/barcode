@@ -4,26 +4,30 @@ import { BarcodeLabelsComponent } from './barcode-labels.component'
 import { provideHttpClientTesting } from '@angular/common/http/testing'
 import { GeneratorService } from '../generator.service'
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
+import { FormGroup, FormGroupDirective } from '@angular/forms'
 
 describe('BarcodeLabelsComponent', () => {
   let component: BarcodeLabelsComponent
   let fixture: ComponentFixture<BarcodeLabelsComponent>
 
   beforeEach(() => {
+    const formGroupDirective = new FormGroupDirective([], [])
+
     TestBed.configureTestingModule({
       imports: [BarcodeLabelsComponent],
       providers: [
         GeneratorService,
+        { provide: FormGroupDirective, useValue: formGroupDirective },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
       ],
     })
 
     const generatorService = TestBed.inject(GeneratorService)
-    const form = generatorService.getLabelsArrayForm()
+    const labels = generatorService.getLabelsArrayForm()
+    formGroupDirective.form = new FormGroup({ labels })
 
     fixture = TestBed.createComponent(BarcodeLabelsComponent)
-    fixture.componentRef.setInput('form', form)
 
     component = fixture.componentInstance
     fixture.detectChanges()

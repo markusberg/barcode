@@ -32,8 +32,8 @@ export const LayoutSchema = z.object({
   pagesize: z.enum(['a4', 'letter']),
   marginLeft: z.number(),
   marginTop: z.number(),
-  cols: z.number().int(),
-  rows: z.number().int(),
+  cols: z.number().positive().int(),
+  rows: z.number().positive().int(),
   spacingCol: z.number(),
   spacingRow: z.number(),
 })
