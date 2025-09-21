@@ -1,5 +1,5 @@
-<ng-container formArray="form">
-  <div class="row font-weight-bold">
+@if (form) {
+  <div class="row fw-bold align-items-end">
     <div class="col"><label class="form-label">Tape type</label></div>
     <div class="col"><label class="form-label">Suffix</label></div>
     <div class="col"><label class="form-label">Prefix</label></div>
@@ -9,7 +9,8 @@
     </div>
     <div class="col">&nbsp;</div>
   </div>
-  @for (label of form().controls; track label; let idx = $index) {
+
+  @for (label of form.controls.labels.controls; track $index) {
     <div class="row" [formGroup]="label">
       <div class="col">
         <div class="form-group">
@@ -66,9 +67,9 @@
               class="form-check-input"
               type="checkbox"
               formControlName="fillpage"
-              id="fillpage{{ idx }}"
+              [id]="'fillpage' + $index"
             />
-            <label class="form-check-label" for="fillpage{{ idx }}"
+            <label class="form-check-label" [for]="'fillpage' + $index"
               >Fill page</label
             >
           </div>
@@ -85,7 +86,7 @@
       </div>
       <div class="col text-end">
         <div class="form-group">
-          @if (isLast(idx)) {
+          @if (isLast($index)) {
             <button
               type="button"
               class="btn btn-primary text-nowrap"
@@ -96,7 +97,7 @@
           } @else {
             <button
               class="btn btn-warning text-nowrap"
-              (click)="removeLabels(idx)"
+              (click)="removeLabels($index)"
             >
               <i class="bi bi-trash me-1"></i>Remove
             </button>
@@ -105,4 +106,4 @@
       </div>
     </div>
   }
-</ng-container>
+}

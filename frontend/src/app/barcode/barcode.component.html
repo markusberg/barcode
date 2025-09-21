@@ -16,36 +16,36 @@
 
   <div class="clearfix"></div>
 
-  <app-barcode-labels [form]="form.controls.labels"></app-barcode-labels>
+  <div [formGroup]="form">
+    <app-barcode-labels />
 
-  <nav ngbNav #nav="ngbNav" class="nav-tabs mt-3">
-    <ng-container ngbNavItem>
-      <a ngbNavLink>Label design</a>
-      <ng-template ngbNavContent>
-        <app-barcode-design [form]="form.controls.design"></app-barcode-design>
-      </ng-template>
-    </ng-container>
-    <ng-container ngbNavItem>
-      <a ngbNavLink>Page layout</a>
-      <ng-template ngbNavContent>
-        <app-barcode-layout [form]="form.controls.layout"></app-barcode-layout>
-        <div class="text-end mt-3">
-          <button
-            class="btn btn-secondary btn-sm me-2"
-            (click)="setPageLayout('LTO')"
-          >
-            Set default LTO layout
-          </button>
-          <button
-            class="btn btn-secondary btn-sm"
-            (click)="setPageLayout('DLT')"
-          >
-            Set default DLT layout
-          </button>
-        </div>
-      </ng-template>
-    </ng-container>
-  </nav>
+    <nav ngbNav #nav="ngbNav" class="nav-tabs mt-3">
+      <ng-container ngbNavItem>
+        <a ngbNavLink>Label design</a>
+        <ng-template ngbNavContent><app-barcode-design /></ng-template>
+      </ng-container>
+      <ng-container ngbNavItem>
+        <a ngbNavLink>Page layout</a>
+        <ng-template ngbNavContent>
+          <app-barcode-layout />
+          <div class="text-end mt-3">
+            <button
+              class="btn btn-secondary btn-sm me-2"
+              (click)="setPageLayout('LTO')"
+            >
+              Set default LTO layout
+            </button>
+            <button
+              class="btn btn-secondary btn-sm"
+              (click)="setPageLayout('DLT')"
+            >
+              Set default DLT layout
+            </button>
+          </div>
+        </ng-template>
+      </ng-container>
+    </nav>
+  </div>
 
   <div [ngbNavOutlet]="nav" class="p-3 border border-top-0"></div>
 

@@ -5,11 +5,11 @@ import { HttpClient } from '@angular/common/http'
 
 @Injectable({ providedIn: 'root' })
 export class AppSettingsService {
-  httpClient = inject(HttpClient)
-  url = 'api/app-settings'
+  #httpClient = inject(HttpClient)
+  #url = 'api/app-settings'
 
   getNodeEnv(): Observable<NodeEnv> {
-    const url = `${this.url}/node-env`
-    return this.httpClient.get<NodeEnv>(url)
+    const url = `${this.#url}/node-env`
+    return this.#httpClient.get<NodeEnv>(url)
   }
 }

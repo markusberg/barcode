@@ -5,10 +5,10 @@ import { EnvBannerComponent } from './env-banner/env-banner.component'
 
 @Component({
   selector: 'app-root',
-  template: `<app-menubar /><app-env-banner />
-    <div class="flex-grow-1 overflow-auto py-3">
-      <router-outlet />
-    </div>`,
+  template: `
+    <div class="sticky-top"><app-menubar /><app-env-banner /></div>
+    <div class="my-3"><router-outlet /></div>
+  `,
   imports: [EnvBannerComponent, MenubarComponent, RouterModule],
 })
 export class AppComponent {

@@ -1,6 +1,6 @@
-import { Component, OnDestroy, signal } from '@angular/core'
+import { Component, OnDestroy, signal, inject } from '@angular/core'
 import { AsyncPipe, JsonPipe, NgClass } from '@angular/common'
-import { FormBuilder } from '@angular/forms'
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 import {
   ReplaySubject,
@@ -28,6 +28,7 @@ import { BarcodeLayoutComponent } from '../barcode-layout/barcode-layout.compone
     JsonPipe,
     NgbNavModule,
     NgClass,
+    ReactiveFormsModule,
   ],
   templateUrl: './barcode.component.html',
   styles: [
@@ -39,14 +40,18 @@ import { BarcodeLayoutComponent } from '../barcode-layout/barcode-layout.compone
   ],
 })
 export class BarcodeComponent implements OnDestroy {
+  #generatorService = inject(GeneratorService)
+  #domSanitizer = inject(DomSanitizer)
+  #formBuilder = inject(FormBuilder)
+
   isLoading = signal<boolean>(false)
   error = signal<any>(null)
   errorExpanded = signal<boolean>(false)
 
-  form = this.formBuilder.group({
-    design: this.generatorService.getDesignForm(),
-    labels: this.generatorService.getLabelsArrayForm(),
-    layout: this.generatorService.getLayoutForm('LTO'),
+  form = this.#formBuilder.group({
+    design: this.#generatorService.getDesignForm(),
+    labels: this.#generatorService.getLabelsArrayForm(),
+    layout: this.#generatorService.getLayoutForm('LTO'),
   })
 
   toggleError() {
@@ -54,12 +59,6 @@ export class BarcodeComponent implements OnDestroy {
   }
 
   pdfUrl = signal<string | null>(null)
-
-  constructor(
-    private generatorService: GeneratorService,
-    private domSanitizer: DomSanitizer,
-    private formBuilder: FormBuilder,
-  ) {}
 
   ngOnDestroy(): void {
     this.revokePdfUrl()
@@ -84,10 +83,10 @@ export class BarcodeComponent implements OnDestroy {
     }),
     map(() => this.form.getRawValue()),
     switchMap((value) =>
-      this.generatorService.generatePdf(value).pipe(
+      this.#generatorService.generatePdf(value).pipe(
         map((blob) => URL.createObjectURL(blob)),
         tap((url) => this.pdfUrl.set(url)),
-        map((url) => this.domSanitizer.bypassSecurityTrustResourceUrl(url)),
+        map((url) => this.#domSanitizer.bypassSecurityTrustResourceUrl(url)),
         catchError((err) => {
           this.isLoading.set(false)
           this.error.set(err)
@@ -99,7 +98,7 @@ export class BarcodeComponent implements OnDestroy {
   )
 
   setPageLayout(tapetype: 'LTO' | 'DLT' = 'LTO'): void {
-    const layout = this.generatorService.defaultLayout[tapetype]
-    this.form.get('layout')?.setValue(layout)
+    const layout = this.#generatorService.defaultLayout[tapetype]
+    this.form.controls.layout.setValue(layout)
   }
 }

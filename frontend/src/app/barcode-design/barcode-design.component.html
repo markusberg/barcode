@@ -1,47 +1,51 @@
-<div class="row" [formGroup]="form()">
-  <div class="col-sm">
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        formControlName="borders"
-        id="borders"
-      />
-      <label class="form-check-label" for="borders">Labels have borders</label>
+@if (form) {
+  <div class="row" [formGroup]="form.controls.design">
+    <div class="col-sm">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          formControlName="borders"
+          id="borders"
+        />
+        <label class="form-check-label" for="borders"
+          >Labels have borders</label
+        >
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          formControlName="colorized"
+          id="colorized"
+        />
+        <label class="form-check-label" for="colorized">
+          Labels are colorized<br />
+          <small>(tri-optic vibrant compatible)</small>
+        </label>
+      </div>
     </div>
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        formControlName="colorized"
-        id="colorized"
-      />
-      <label class="form-check-label" for="colorized">
-        Labels are colorized<br />
-        <small>(tri-optic vibrant compatible)</small>
-      </label>
+    <div class="form-group col-sm">
+      <label class="form-label" for="textOrientation">Text orientation</label>
+      <select
+        class="form-select"
+        id="textOrientation"
+        formControlName="textOrientation"
+      >
+        <option value="horizontal">Horizontal</option>
+        <option value="vertical">Vertical</option>
+      </select>
+    </div>
+    <div class="form-group col-sm">
+      <label class="form-label" for="textPosition">Text position</label>
+      <select
+        class="form-select"
+        id="textPosition"
+        formControlName="textPosition"
+      >
+        <option value="top">Top</option>
+        <option value="bottom">Bottom</option>
+      </select>
     </div>
   </div>
-  <div class="form-group col-sm">
-    <label class="form-label" for="textOrientation">Text orientation</label>
-    <select
-      class="form-select"
-      id="textOrientation"
-      formControlName="textOrientation"
-    >
-      <option value="horizontal">Horizontal</option>
-      <option value="vertical">Vertical</option>
-    </select>
-  </div>
-  <div class="form-group col-sm">
-    <label class="form-label" for="textPosition">Text position</label>
-    <select
-      class="form-select"
-      id="textPosition"
-      formControlName="textPosition"
-    >
-      <option value="top">Top</option>
-      <option value="bottom">Bottom</option>
-    </select>
-  </div>
-</div>
+}

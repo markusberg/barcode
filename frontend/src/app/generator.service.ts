@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import {
   AbstractControl,
@@ -27,10 +27,9 @@ export type frmLayout = Formify<Layout>
 
 @Injectable({ providedIn: 'root' })
 export class GeneratorService {
-  constructor(
-    private fb: FormBuilder,
-    private httpClient: HttpClient,
-  ) {}
+  private fb = inject(FormBuilder)
+  private httpClient = inject(HttpClient)
+
   url = `api/generator`
 
   generatePdf(barcode: Barcode): Observable<Blob> {

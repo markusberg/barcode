@@ -1,6 +1,12 @@
-import { Component, input } from '@angular/core'
+import { Component, inject, OnInit } from '@angular/core'
 
-import { FormArray, ReactiveFormsModule } from '@angular/forms'
+import {
+  ControlContainer,
+  FormArray,
+  FormGroup,
+  FormGroupDirective,
+  ReactiveFormsModule,
+} from '@angular/forms'
 import { frmLabel, GeneratorService } from '../generator.service'
 
 interface Tapetype {
@@ -12,11 +18,19 @@ interface Tapetype {
   selector: 'app-barcode-labels',
   imports: [ReactiveFormsModule],
   templateUrl: './barcode-labels.component.html',
+  viewProviders: [
+    { provide: ControlContainer, useExisting: FormGroupDirective },
+  ],
 })
-export class BarcodeLabelsComponent {
-  form = input.required<FormArray<frmLabel>>()
+export class BarcodeLabelsComponent implements OnInit {
+  #barcodeService = inject(GeneratorService)
+  #parent = inject(FormGroupDirective)
 
-  constructor(private barcodeService: GeneratorService) {}
+  form: FormGroup<{ labels: FormArray<frmLabel> }> | null = null
+
+  ngOnInit(): void {
+    this.form = this.#parent.form
+  }
 
   onTapetypeChange(label: frmLabel) {
     switch (label.controls['tapetype'].value) {
@@ -50,14 +64,24 @@ export class BarcodeLabelsComponent {
   }
 
   appendCopy(label: frmLabel): void {
-    this.form().push(this.barcodeService.buildLabel({ ...label.getRawValue() }))
+    if (this.form) {
+      this.form.controls.labels.push(
+        this.#barcodeService.buildLabel({ ...label.getRawValue() }),
+      )
+    }
   }
 
   removeLabels(idx: number): void {
-    this.form().removeAt(idx)
+    if (this.form) {
+      this.form.controls.labels.removeAt(idx)
+    }
   }
 
   isLast(idx: number): boolean {
-    return idx === this.form().length - 1
+    if (this.form) {
+      const idxLast = this.form.controls.labels.length - 1
+      return idx === idxLast
+    }
+    return true
   }
 }
