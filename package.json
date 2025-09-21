@@ -34,8 +34,11 @@
   },
   "homepage": "https://github.com/markusberg/barcode#readme",
   "dependencies": {
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.7",
-    "prettier": "^3.3.2"
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2"
+  },
+  "lint-staged": {
+    "(*.ts|*.js|*.scss|*.json|*.html|*.md)": "prettier --write --check"
   }
 }
