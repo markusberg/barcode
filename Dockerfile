@@ -1,5 +1,5 @@
 # Build
-FROM node:22 as builder
+FROM node:24 as builder
 ENV NG_CLI_ANALYTICS=false
 WORKDIR /app
 COPY package* .
@@ -10,8 +10,8 @@ RUN npm ci --workspaces
 RUN npm run build --workspaces
 
 # Create smaller image for deploy
-FROM alpine:3.22
-RUN apk add --no-cache nodejs=~22
+FROM alpine:3.23
+RUN apk add --no-cache nodejs=~24
 
 WORKDIR /app
 COPY package* .
