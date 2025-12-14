@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 export const LabelDefSchema = z.object({
-  col: z.number().int(),
-  row: z.number().int(),
+  col: z.number().int().positive(),
+  row: z.number().int().positive(),
   text: z.string(),
 })
 
