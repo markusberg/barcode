@@ -6,9 +6,8 @@ import { loadAndParse } from '@markusberg/key-value-parser'
 
 import { type NodeEnv, NodeEnvSchema } from './interfaces/node-env.js'
 
-const stringToInt = z.string().transform((val) => parseInt(val))
 const EnvSchema = z.object({
-  PORT: stringToInt.default('3110'),
+  PORT: z.coerce.number().int().positive().default(3110),
   SERVER_PREFIX: z.string().default(''),
 })
 

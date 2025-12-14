@@ -1,10 +1,11 @@
-import { Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { MenubarComponent } from './menubar/menubar.component'
 import { EnvBannerComponent } from './env-banner/env-banner.component'
 
 @Component({
   selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="sticky-top"><app-menubar /><app-env-banner /></div>
     <div class="my-3"><router-outlet /></div>

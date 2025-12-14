@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { filter } from 'rxjs'
 import { AppSettingsService } from '../app-settings.service'
 import { AsyncPipe } from '@angular/common'
 
 @Component({
   selector: 'app-env-banner',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AsyncPipe],
   template: `
     @if (nodeEnv$ | async; as nodeEnv) {
