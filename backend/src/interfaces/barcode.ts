@@ -28,8 +28,11 @@ export const LabelSchema = z.object({
   num: z.number().int().min(1).max(999),
 })
 
+// pageWidth and pageHeight are ignored if pagesize is not 'custom'
 export const LayoutSchema = z.object({
-  pagesize: z.enum(['a4', 'letter']),
+  pagesize: z.enum(['a4', 'letter', 'custom']),
+  pageWidth: z.number().positive(),
+  pageHeight: z.number().positive(),
   marginLeft: z.number(),
   marginTop: z.number(),
   cols: z.number().positive().int(),

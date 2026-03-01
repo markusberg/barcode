@@ -15,8 +15,12 @@ export class Document {
     this.#design = design
     this.#layout = layout
 
+    const size =
+      layout.pagesize === 'custom'
+        ? [layout.pageWidth, layout.pageHeight]
+        : layout.pagesize
     this.#page = {
-      size: this.#layout.pagesize,
+      size,
       margins: {
         top: this.#layout.marginTop,
         left: this.#layout.marginLeft,

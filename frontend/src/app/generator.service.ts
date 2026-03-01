@@ -57,6 +57,8 @@ export class GeneratorService {
   defaultLayout: Record<string, Layout> = {
     LTO: {
       pagesize: 'a4',
+      pageHeight: 841.89,
+      pageWidth: 595.28,
       cols: 2,
       rows: 16,
       marginLeft: 52.4,
@@ -67,6 +69,8 @@ export class GeneratorService {
 
     DLT: {
       pagesize: 'a4',
+      pageHeight: 841.89,
+      pageWidth: 595.28,
       cols: 3,
       rows: 13,
       marginLeft: 42.5,
@@ -93,6 +97,8 @@ export class GeneratorService {
     const layout = this.defaultLayout[tapetype]
     return this.fb.nonNullable.group({
       pagesize: [layout.pagesize],
+      pageWidth: [layout.pageWidth, Validators.min(1)],
+      pageHeight: [layout.pageHeight, Validators.min(1)],
       marginLeft: [layout.marginLeft, Validators.min(0)],
       marginTop: [layout.marginTop, Validators.min(0)],
       cols: [layout.cols, Validators.min(1)],

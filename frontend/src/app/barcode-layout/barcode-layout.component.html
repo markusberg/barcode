@@ -6,8 +6,22 @@
         <select class="form-select" formControlName="pagesize">
           <option value="a4">A4</option>
           <option value="letter">Letter</option>
+          <option value="custom">Custom...</option>
         </select>
       </div>
+      @if (form.controls.layout.controls.pagesize.value === 'custom') {
+        <div class="col-sm">
+          <app-millimeters formControlName="pageWidth"
+            >Page width</app-millimeters
+          >
+        </div>
+        <div class="col-sm">
+          <app-millimeters formControlName="pageHeight"
+            >Page height</app-millimeters
+          >
+        </div>
+      }
+
       <div class="form-group col-sm">
         <label class="form-label" for="cols">Columns</label>
         <input class="form-control" type="number" formControlName="cols" />
