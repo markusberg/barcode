@@ -28,6 +28,8 @@ import {
           [(ngModel)]="value"
           [disabled]="isDisabled()"
           (blur)="touch()"
+          onmousewheel="() => {}"
+          min="0"
         />
         <span class="input-group-text">mm</span>
       </div>

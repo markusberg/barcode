@@ -1,7 +1,11 @@
 @if (form) {
   <ng-container [formGroup]="form.controls.layout">
+    @let custom = form.controls.layout.controls.pagesize.value === 'custom';
     <div class="row">
-      <div class="form-group col-sm">
+      <div
+        class="form-group col-12"
+        [ngClass]="custom ? 'col-sm-4 col-lg-2' : 'col-lg-4'"
+      >
         <label class="form-label" for="pagesize">Page size</label>
         <select class="form-select" formControlName="pagesize">
           <option value="a4">A4</option>
@@ -9,45 +13,63 @@
           <option value="custom">Custom...</option>
         </select>
       </div>
-      @if (form.controls.layout.controls.pagesize.value === 'custom') {
-        <div class="col-sm">
+      @if (custom) {
+        <div class="col-6 col-sm-4 col-lg-3">
           <app-millimeters formControlName="pageWidth"
             >Page width</app-millimeters
           >
         </div>
-        <div class="col-sm">
+        <div class="col-6 col-sm-4 col-lg-3">
           <app-millimeters formControlName="pageHeight"
             >Page height</app-millimeters
           >
         </div>
       }
 
-      <div class="form-group col-sm">
+      <div
+        class="form-group col-6"
+        [ngClass]="custom ? 'col-lg-2' : 'col-lg-4'"
+      >
         <label class="form-label" for="cols">Columns</label>
-        <input class="form-control" type="number" formControlName="cols" />
+        <input
+          class="form-control"
+          type="number"
+          formControlName="cols"
+          onmousewheel="() => {}"
+          min="1"
+        />
       </div>
-      <div class="form-group col-sm">
+      <div
+        class="form-group col-6"
+        [ngClass]="custom ? 'col-lg-2' : 'col-lg-4'"
+      >
         <label class="form-label" for="rows">Rows</label>
-        <input class="form-control" type="number" formControlName="rows" />
+        <input
+          class="form-control"
+          type="number"
+          formControlName="rows"
+          onmousewheel="() => {}"
+          min="1"
+        />
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-md-6 col-lg-3">
+      <div class="col-6 col-lg-3">
         <app-millimeters formControlName="marginLeft"
           >Page left margin</app-millimeters
         >
       </div>
-      <div class="col-md-6 col-lg-3">
+      <div class="col-6 col-lg-3">
         <app-millimeters formControlName="marginTop"
           >Page top margin</app-millimeters
         >
       </div>
-      <div class="col-md-6 col-lg-3">
+      <div class="col-6 col-lg-3">
         <app-millimeters formControlName="spacingCol"
           >Spacing between columns</app-millimeters
         >
       </div>
-      <div class="col-md-6 col-lg-3">
+      <div class="col-6 col-lg-3">
         <app-millimeters formControlName="spacingRow"
           >Spacing between rows</app-millimeters
         >
