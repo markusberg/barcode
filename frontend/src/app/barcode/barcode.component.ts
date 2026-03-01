@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal, inject } from '@angular/core'
+import { Component, OnDestroy, signal, inject, effect } from '@angular/core'
 import { AsyncPipe, JsonPipe, NgClass } from '@angular/common'
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
@@ -18,6 +18,7 @@ import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap'
 import { BarcodeDesignComponent } from '../barcode-design/barcode-design.component'
 import { BarcodeLayoutComponent } from '../barcode-layout/barcode-layout.component'
 
+type Tab = 'design' | 'layout'
 @Component({
   selector: 'app-barcode',
   imports: [
@@ -47,6 +48,19 @@ export class BarcodeComponent implements OnDestroy {
   isLoading = signal<boolean>(false)
   error = signal<any>(null)
   errorExpanded = signal<boolean>(false)
+
+  #LOCAL_STORAGE_KEY: string = 'tab'
+
+  constructor() {
+    effect(() => {
+      const tab = this.activeTab()
+      localStorage.setItem(this.#LOCAL_STORAGE_KEY, tab)
+    })
+  }
+
+  activeTab = signal<Tab>(
+    (localStorage.getItem(this.#LOCAL_STORAGE_KEY) as Tab) || 'design',
+  )
 
   form = this.#formBuilder.group({
     design: this.#generatorService.getDesignForm(),

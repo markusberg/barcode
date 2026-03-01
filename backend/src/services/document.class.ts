@@ -7,23 +7,25 @@ export class Document {
   doc: PDFKit.PDFDocument
   labelsSoFar: number = 0
 
-  design: Design
-  layout: Layout
+  readonly #design: Design
+  readonly #layout: Layout
+  readonly #page: PDFKit.PDFDocumentOptions
 
   constructor(design: Design, layout: Layout) {
-    this.design = design
-    this.layout = layout
+    this.#design = design
+    this.#layout = layout
 
-    this.doc = new PDFDocument({
-      size: this.layout.pagesize,
+    this.#page = {
+      size: this.#layout.pagesize,
       margins: {
-        top: this.mmToPt(this.layout.marginTop),
-        left: this.mmToPt(this.layout.marginLeft),
+        top: this.#layout.marginTop,
+        left: this.#layout.marginLeft,
         bottom: 0,
         right: 0,
       },
-    })
+    }
 
+    this.doc = new PDFDocument(this.#page)
     this.doc.lineWidth(0.5)
   }
 
@@ -31,33 +33,25 @@ export class Document {
     if (this.labelsSoFar >= 512) {
       return
     }
-    const labelsPerPage = this.layout.cols * this.layout.rows
-    for (let i = 0; i < series.labels.length; i++) {
+    const labelsPerPage = this.#layout.cols * this.#layout.rows
+    for (const label of series.labels) {
       if (this.labelsSoFar && this.labelsSoFar % labelsPerPage === 0) {
-        this.doc.addPage({
-          size: this.layout.pagesize,
-          margins: {
-            top: this.mmToPt(this.layout.marginTop),
-            left: this.mmToPt(this.layout.marginLeft),
-            bottom: 0,
-            right: 0,
-          },
-        })
+        this.doc.addPage(this.#page)
       }
-      await this.drawBarcode(series.labels[i], series.tapetype, series.suffix)
+      await this.drawBarcode(label, series.tapetype, series.suffix)
       this.labelsSoFar++
     }
   }
 
   async drawBarcode(labelDef: LabelDef, tapetype: string, suffix: string) {
-    const bc = new Label(this.design, tapetype, suffix, labelDef.text)
+    const bc = new Label(this.#design, tapetype, suffix, labelDef.text)
 
     const x =
-      this.layout.marginLeft +
-      labelDef.col * (bc.width + this.layout.spacingCol)
+      this.#layout.marginLeft +
+      labelDef.col * (bc.width + this.#layout.spacingCol)
     const y =
-      this.layout.marginTop +
-      labelDef.row * (bc.height + this.layout.spacingRow)
+      this.#layout.marginTop +
+      labelDef.row * (bc.height + this.#layout.spacingRow)
 
     await bc.draw(this.doc, x, y)
   }
@@ -65,9 +59,5 @@ export class Document {
   public write() {
     this.doc.end()
     return this.doc
-  }
-
-  private mmToPt(mm: number): number {
-    return (mm / 25.4) * 72
   }
 }

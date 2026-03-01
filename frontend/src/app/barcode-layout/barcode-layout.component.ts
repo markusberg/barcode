@@ -7,10 +7,11 @@ import {
   FormGroupDirective,
   ReactiveFormsModule,
 } from '@angular/forms'
+import { MillimetersComponent } from '../millimeters/millimeters.component'
 
 @Component({
   selector: 'app-barcode-layout',
-  imports: [ReactiveFormsModule],
+  imports: [MillimetersComponent, ReactiveFormsModule],
   templateUrl: './barcode-layout.component.html',
   viewProviders: [
     { provide: ControlContainer, useExisting: FormGroupDirective },

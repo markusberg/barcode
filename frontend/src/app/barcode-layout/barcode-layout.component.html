@@ -18,55 +18,25 @@
       </div>
     </div>
     <div class="row mt-3">
-      <div class="form-group col-md-6 col-lg-3">
-        <label class="form-label" for="marginPageLeft">Page left margin</label>
-        <div class="input-group">
-          <input
-            class="form-control"
-            type="number"
-            step="0.1"
-            formControlName="marginLeft"
-          />
-          <span class="input-group-text">mm</span>
-        </div>
-      </div>
-      <div class="form-group col-md-6 col-lg-3">
-        <label class="form-label" for="marginPageTop">Page top margin</label>
-        <div class="input-group">
-          <input
-            class="form-control"
-            type="number"
-            step="0.1"
-            formControlName="marginTop"
-          />
-          <span class="input-group-text">mm</span>
-        </div>
-      </div>
-      <div class="form-group col-md-6 col-lg-3">
-        <label class="form-label" for="spacingCol"
-          >Spacing between columns</label
+      <div class="col-md-6 col-lg-3">
+        <app-millimeters formControlName="marginLeft"
+          >Page left margin</app-millimeters
         >
-        <div class="input-group">
-          <input
-            class="form-control"
-            type="number"
-            step="0.1"
-            formControlName="spacingCol"
-          />
-          <span class="input-group-text">mm</span>
-        </div>
       </div>
-      <div class="form-group col-md-6 col-lg-3">
-        <label class="form-label" for="spacingRow">Spacing between rows</label>
-        <div class="input-group">
-          <input
-            class="form-control"
-            type="number"
-            step="0.1"
-            formControlName="spacingRow"
-          />
-          <span class="input-group-text">mm</span>
-        </div>
+      <div class="col-md-6 col-lg-3">
+        <app-millimeters formControlName="marginTop"
+          >Page top margin</app-millimeters
+        >
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <app-millimeters formControlName="spacingCol"
+          >Spacing between columns</app-millimeters
+        >
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <app-millimeters formControlName="spacingRow"
+          >Spacing between rows</app-millimeters
+        >
       </div>
     </div>
   </ng-container>

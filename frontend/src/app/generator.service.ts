@@ -54,14 +54,14 @@ export class GeneratorService {
     textPosition: 'top',
   }
 
-  defaultLayout: { [key: string]: Layout } = {
+  defaultLayout: Record<string, Layout> = {
     LTO: {
       pagesize: 'a4',
       cols: 2,
       rows: 16,
-      marginLeft: 18.5,
-      marginTop: 22,
-      spacingCol: 20.5,
+      marginLeft: 52.4,
+      marginTop: 62.4,
+      spacingCol: 58,
       spacingRow: 0,
     },
 
@@ -69,8 +69,8 @@ export class GeneratorService {
       pagesize: 'a4',
       cols: 3,
       rows: 13,
-      marginLeft: 15,
-      marginTop: 15,
+      marginLeft: 42.5,
+      marginTop: 42.5,
       spacingCol: 0,
       spacingRow: 0,
     },

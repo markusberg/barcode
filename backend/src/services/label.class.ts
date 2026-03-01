@@ -27,11 +27,11 @@ export class Label {
     this.suffix = suffix
     this.text = text
 
-    this.width = this.tapeType === 'DLT' ? 55 : 76.2
-    this.height = this.tapeType === 'DLT' ? 21 : 15.875
-    this.radius = this.tapeType === 'DLT' ? 0 : 2.5
-    this.barcodeWidth = this.tapeType === 'DLT' ? 47 : 65
-    this.barcodeHeight = this.tapeType === 'DLT' ? 15 : 10.5
+    this.width = this.tapeType === 'DLT' ? 156 : 216
+    this.height = this.tapeType === 'DLT' ? 59.5 : 45
+    this.radius = this.tapeType === 'DLT' ? 0 : 7
+    this.barcodeWidth = this.tapeType === 'DLT' ? 133 : 184
+    this.barcodeHeight = this.tapeType === 'DLT' ? 42.5 : 30
     this.paddingSide = Math.round((this.width - this.barcodeWidth) / 2)
 
     this.numberOfBoxes = this.tapeType === 'DLT' ? 6 : 7
@@ -52,19 +52,13 @@ export class Label {
   boxWidth: number
   boxHeight: number
 
-  private getRotationOrigin(
-    x: number,
-    y: number,
-  ): { origin: [number, number] } {
+  #getRotationOrigin(x: number, y: number): { origin: [number, number] } {
     return {
-      origin: [
-        this.mmToPt(x + this.boxWidth / 2),
-        this.mmToPt(y + this.boxHeight / 2),
-      ],
+      origin: [x + this.boxWidth / 2, y + this.boxHeight / 2],
     }
   }
 
-  private getFillColor(char: string): [number, number, number] | null {
+  #getFillColor(char: string): [number, number, number] | null {
     const idx = parseInt(char)
     return isNaN(idx) ? null : this.colors[idx]
   }
@@ -77,17 +71,13 @@ export class Label {
    * @param x
    * @param y
    */
-  public async draw(doc: PDFKit.PDFDocument, x: number, y: number) {
+  public async draw(
+    doc: PDFKit.PDFDocument,
+    x: number,
+    y: number,
+  ): Promise<void> {
     if (this.design.borders) {
-      doc
-        .roundedRect(
-          this.mmToPt(x),
-          this.mmToPt(y),
-          this.mmToPt(this.width),
-          this.mmToPt(this.height),
-          this.mmToPt(this.radius),
-        )
-        .stroke()
+      doc.roundedRect(x, y, this.width, this.height, this.radius).stroke()
     }
 
     doc.font('Helvetica-Bold')
@@ -98,13 +88,8 @@ export class Label {
         y +
         (this.design.textPosition === 'top' ? 0 : this.height - this.boxHeight)
 
-      let box = doc.rect(
-        this.mmToPt(xBox),
-        this.mmToPt(yBox),
-        this.mmToPt(this.boxWidth),
-        this.mmToPt(this.boxHeight),
-      )
-      const color = this.getFillColor(this.text[i])
+      let box = doc.rect(xBox, yBox, this.boxWidth, this.boxHeight)
+      const color = this.#getFillColor(this.text[i])
       if (this.design.colorized && color) {
         box.fillAndStroke(color, 'black')
       } else {
@@ -115,32 +100,30 @@ export class Label {
       // Tape type goes in the last box. But not for DLT
       if (this.tapeType !== 'DLT' && i + 1 === this.numberOfBoxes) {
         txt = this.suffix
-        offsetTop = 1.5
-        doc.fontSize(this.mmToPt(this.boxHeight - 2))
+        offsetTop = 4.5
+        doc.fontSize(this.boxHeight - 6)
       } else {
         txt = this.text[i] || ''
-        offsetTop = 1
+        offsetTop = 3
         if (this.design.textOrientation === 'vertical') {
-          doc.fontSize(this.mmToPt(this.boxHeight))
+          doc.fontSize(this.boxHeight)
         } else {
-          doc.fontSize(this.mmToPt(this.boxHeight - 1))
+          doc.fontSize(this.boxHeight - 3)
         }
       }
 
       const block =
         this.design.textOrientation === 'vertical'
-          ? doc.rotate(-90, this.getRotationOrigin(xBox, yBox))
+          ? doc.rotate(-90, this.#getRotationOrigin(xBox, yBox))
           : doc
 
-      block
-        .fillColor('black')
-        .text(txt, this.mmToPt(xBox), this.mmToPt(yBox + offsetTop), {
-          width: this.mmToPt(this.boxWidth),
-          height: this.mmToPt(this.boxHeight - 2),
-          align: 'center',
-        })
+      block.fillColor('black').text(txt, xBox, yBox + offsetTop, {
+        width: this.boxWidth,
+        height: this.boxHeight - 6,
+        align: 'center',
+      })
       if (this.design.textOrientation === 'vertical') {
-        doc.rotate(90, this.getRotationOrigin(xBox, yBox))
+        doc.rotate(90, this.#getRotationOrigin(xBox, yBox))
       }
     }
 
@@ -169,13 +152,9 @@ export class Label {
     const xBox = x + this.paddingSide
     const yBox = y + (this.design.textPosition === 'top' ? this.boxHeight : 0)
 
-    doc.image(image, this.mmToPt(xBox), this.mmToPt(yBox), {
-      width: this.mmToPt(this.barcodeWidth),
-      height: this.mmToPt(this.barcodeHeight),
+    doc.image(image, xBox, yBox, {
+      width: this.barcodeWidth,
+      height: this.barcodeHeight,
     })
-  }
-
-  private mmToPt(mm: number): number {
-    return (mm / 25.4) * 72
   }
 }

@@ -19,12 +19,12 @@
   <div [formGroup]="form">
     <app-barcode-labels />
 
-    <nav ngbNav #nav="ngbNav" class="nav-tabs mt-3">
-      <ng-container ngbNavItem>
+    <nav ngbNav #nav="ngbNav" class="nav-tabs mt-3" [(activeId)]="activeTab">
+      <ng-container ngbNavItem="design">
         <a ngbNavLink>Label design</a>
         <ng-template ngbNavContent><app-barcode-design /></ng-template>
       </ng-container>
-      <ng-container ngbNavItem>
+      <ng-container ngbNavItem="layout">
         <a ngbNavLink>Page layout</a>
         <ng-template ngbNavContent>
           <app-barcode-layout />
